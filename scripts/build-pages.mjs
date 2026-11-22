@@ -25,4 +25,16 @@ if (result.error) {
 if (result.status !== 0) process.exit(result.status ?? 1);
 
 await writeFile(join(projectRoot, "out/.nojekyll"), "");
+// Build provenance contains no visitor data and lets maintainers check the live
+// artifact against the commit that passed CI. A local dirty build is explicit.
+const gitHead = spawnSync("git", ["rev-parse", "HEAD"], { cwd: projectRoot, encoding: "utf8" });
+const gitStatus = spawnSync("git", ["status", "--porcelain"], { cwd: projectRoot, encoding: "utf8" });
+const sourceSha = process.env.GITHUB_SHA ?? (gitHead.status === 0 ? gitHead.stdout.trim() : null);
+const sourceState = gitStatus.status === 0 ? (gitStatus.stdout.trim() ? "modified" : "clean") : "unknown";
+await writeFile(join(projectRoot, "out/version.json"), JSON.stringify({
+  sourceSha,
+  sourceState,
+  basePath,
+  builtAt: new Date().toISOString(),
+}, null, 2) + "\n");
 console.log(`Static Pages build ready: out → ${basePath || "/"}`);

@@ -1,10 +1,5 @@
 @import "tailwindcss";
-@import "@fontsource/inter/400.css";
-@import "@fontsource/inter/500.css";
-@import "@fontsource/inter/600.css";
-@import "@fontsource/noto-sans-tc/400.css";
-@import "@fontsource/noto-sans-tc/500.css";
-@import "@fontsource/noto-sans-tc/700.css";
+@import "./fonts.css";
 
 @theme inline {
   --color-primary: var(--primary);
@@ -281,7 +276,7 @@ button {
   align-items: center;
   letter-spacing: 0.13em;
   font-size: 9px;
-  color: #576c99;
+  color: #46546e;
 }
 .preview-cross {
   font-size: 22px;
@@ -360,7 +355,7 @@ button {
   align-items: center;
   gap: 7px;
   padding: 0 15px 13px;
-  font-family: "Noto Sans TC", sans-serif;
+  font-family: var(--font-sans);
   font-size: 13px;
   line-height: 1.5;
   font-weight: 700;
@@ -379,7 +374,7 @@ button {
 .phone-brand small {
   display: block;
   font:
-    5px "Inter",
+    5px var(--font-sans),
     sans-serif;
   letter-spacing: 0.12em;
 }
@@ -410,7 +405,7 @@ button {
 .phone-eyebrow {
   font-size: 6px;
   letter-spacing: 0.14em;
-  color: #637a8a;
+  color: #536a7b;
 }
 .phone-content > p {
   font-size: 22px;
@@ -506,7 +501,7 @@ button {
   justify-content: center;
   gap: 7px;
   font-size: 9px;
-  color: #667797;
+  color: #46546e;
   letter-spacing: 0.02em;
 }
 .hero-preview figcaption .status-dot {
@@ -607,13 +602,13 @@ h2 {
 .scenario-number {
   font-size: 12px;
   font-weight: 500;
-  color: #7a89a5;
+  color: var(--muted);
 }
 .scenario-english {
   font-size: 9px;
   font-weight: 500;
   letter-spacing: 0.12em;
-  color: #78859a;
+  color: var(--muted);
   margin-bottom: 7px;
 }
 .scenario-card h3 {
@@ -811,7 +806,7 @@ h2 {
   font-size: 18px;
 }
 .form-toolbar p {
-  font-size: 11px;
+  font-size: 14px;
   color: var(--muted);
   margin-top: 4px;
 }
@@ -822,7 +817,7 @@ h2 {
   gap: 7px;
   background: transparent;
   color: var(--secondary);
-  font-size: 11px;
+  font-size: 14px;
   min-height: 44px;
   padding: 8px 0;
   flex-shrink: 0;
@@ -843,25 +838,25 @@ h2 {
 }
 .field-label {
   display: block;
-  font-size: 12px;
+  font-size: 16px;
   font-weight: 500;
   color: #27354d;
   margin-bottom: 8px;
 }
 .field-meta {
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 400;
   color: var(--muted);
   margin-left: 7px;
 }
 .field-help {
-  font-size: 10px;
+  font-size: 14px;
   color: var(--muted);
   margin-top: 6px;
   line-height: 1.9;
 }
 .field-error {
-  font-size: 11px;
+  font-size: 14px;
   color: #b42318;
   margin-top: 7px;
   line-height: 1.7;
@@ -876,14 +871,15 @@ h2 {
   border: 1px solid #d6dce7;
   border-radius: 4px;
   padding: 11px 13px;
-  font-size: 12px;
+  font-size: 16px;
   color: var(--primary);
   line-height: 1.65;
   min-height: 46px;
 }
 .brief-tool input::placeholder,
 .brief-tool textarea::placeholder {
-  color: #7d899c;
+  color: var(--muted);
+  opacity: 1;
 }
 .brief-tool textarea {
   resize: vertical;
@@ -907,7 +903,7 @@ h2 {
   padding: 9px 11px;
   border: 1px solid #d6dce7;
   border-radius: 4px;
-  font-size: 11px;
+  font-size: 14px;
   background: #fff;
   cursor: pointer;
   min-height: 42px;
@@ -941,27 +937,28 @@ h2 {
 }
 .form-bottom .button {
   width: 100%;
-  font-size: 13px;
+  font-size: 14px;
 }
 .form-notice {
-  font-size: 10px;
+  font-size: 14px;
   color: var(--muted);
   line-height: 1.9;
 }
 .summary-view > p {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--muted);
   margin-top: 9px;
 }
 .summary-view .summary-text {
   margin-top: 23px;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 2.1;
   min-height: 260px;
   padding: 19px;
   background: #fff;
   overflow-wrap: anywhere;
   white-space: pre-wrap;
+  overflow-y: auto;
 }
 .summary-actions {
   display: flex;
@@ -970,11 +967,11 @@ h2 {
   margin-top: 22px;
 }
 .summary-actions .button {
-  font-size: 12px;
+  font-size: 14px;
   gap: 9px;
 }
 .copy-feedback {
-  font-size: 12px;
+  font-size: 14px;
   margin-top: 15px;
   color: var(--secondary);
   line-height: 1.9;
@@ -983,7 +980,7 @@ h2 {
   display: flex;
   align-items: center;
   gap: 7px;
-  font-size: 12px;
+  font-size: 14px;
   color: var(--secondary);
   border-top: 1px solid #dce2ed;
   padding-top: 23px;
@@ -1074,7 +1071,7 @@ h2 {
   color: var(--primary);
 }
 .form-required-note {
-  font-size: 10px;
+  font-size: 14px;
   color: var(--muted);
   margin-bottom: 21px;
 }
@@ -1091,6 +1088,143 @@ h2 {
 }
 .summary-title {
   overflow-wrap: anywhere;
+}
+.scenario-examples {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  margin-top: 32px;
+}
+.scenario-example {
+  min-width: 0;
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--surface);
+  overflow-wrap: anywhere;
+}
+.scenario-example-heading h3 {
+  font-size: 18px;
+}
+.example-interface {
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: #fff;
+}
+.example-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--primary);
+}
+.example-title {
+  margin-top: 16px;
+  font-size: 16px;
+  font-weight: 600;
+}
+.example-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+.example-options li {
+  padding: 6px 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 14px;
+}
+.example-detail {
+  margin-block: 16px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--muted);
+}
+.example-action {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px;
+  background: var(--primary);
+  border-radius: 4px;
+  color: #fff;
+  font-size: 14px;
+}
+.scenario-example figcaption {
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 14px;
+}
+.service-scope {
+  border-top: 1px solid var(--border);
+  margin-top: 48px;
+  padding-top: 32px;
+  overflow-wrap: anywhere;
+}
+.service-scope-heading h3 {
+  font-size: 22px;
+}
+.service-scope-heading p {
+  margin-top: 8px;
+  color: var(--muted);
+}
+.service-scope-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  margin-top: 24px;
+}
+.scope-group h4 {
+  margin: 0 0 12px;
+  color: var(--primary);
+  font-size: 16px;
+}
+.scope-group ul {
+  list-style: disc;
+  padding-left: 20px;
+  font-size: 15px;
+  line-height: 1.8;
+}
+.scope-group li + li {
+  margin-top: 8px;
+}
+.scope-preparation,
+.scope-note {
+  margin-top: 16px;
+  font-size: 14px;
+  color: var(--muted);
+}
+.contact-handoff {
+  margin-top: 20px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: #fff;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+.contact-handoff h4 {
+  margin: 0 0 8px;
+  font-size: 16px;
+  color: var(--primary);
+}
+.contact-handoff p {
+  color: var(--muted);
+  line-height: 1.9;
+}
+@media (max-width: 767px) {
+  .scenario-examples,
+  .service-scope-grid {
+    grid-template-columns: 1fr;
+  }
+  .scenario-example {
+    padding: 20px;
+  }
 }
 @media (min-width: 1440px) {
   .hero h1 {
@@ -1405,7 +1539,7 @@ h2 {
   .phone {
     width: 236px;
     margin-top: 62px;
-    margin-bottom: 70px;
+    margin-bottom: 96px;
   }
   .preview-note {
     top: 62px;
@@ -1423,7 +1557,7 @@ h2 {
     left: -55px;
   }
   .action-callout {
-    bottom: 65px;
+    bottom: 55px;
     right: 15px;
     padding: 12px 14px;
   }
@@ -1617,16 +1751,17 @@ h2 {
     gap: 8px;
     padding-bottom: 19px;
     margin-bottom: 22px;
+    flex-wrap: wrap;
   }
   .form-toolbar h3,
   .summary-view h3 {
     font-size: 16px;
   }
   .form-toolbar p {
-    font-size: 10px;
+    font-size: 14px;
   }
   .text-button {
-    font-size: 10px;
+    font-size: 14px;
     gap: 5px;
   }
   .text-button svg {
@@ -1637,10 +1772,10 @@ h2 {
     gap: 22px;
   }
   .field-label {
-    font-size: 12px;
+    font-size: 16px;
   }
   .field-meta {
-    font-size: 9px;
+    font-size: 14px;
   }
   .brief-tool input[type="text"],
   .brief-tool select,
@@ -1651,17 +1786,17 @@ h2 {
   }
   .brief-tool input::placeholder,
   .brief-tool textarea::placeholder {
-    font-size: 12px;
+    font-size: 14px;
   }
   .field-help {
-    font-size: 10px;
+    font-size: 14px;
   }
   .material-options {
     gap: 7px;
   }
   .material-option {
     padding: 9px 10px;
-    font-size: 11px;
+    font-size: 14px;
     min-height: 44px;
   }
   .form-bottom {
@@ -1670,10 +1805,10 @@ h2 {
     gap: 13px;
   }
   .form-notice {
-    font-size: 9px;
+    font-size: 14px;
   }
   .summary-view .summary-text {
-    font-size: 15px;
+    font-size: 16px;
     min-height: 320px;
     line-height: 2;
     padding: 14px;
@@ -1683,13 +1818,13 @@ h2 {
   }
   .summary-actions .button {
     width: 100%;
-    font-size: 13px;
+    font-size: 14px;
   }
   .summary-view > p {
-    font-size: 11px;
+    font-size: 14px;
   }
   .summary-contact {
-    font-size: 12px;
+    font-size: 14px;
   }
   .closing {
     padding-block: 32px;

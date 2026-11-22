@@ -1,4 +1,4 @@
-name: Verify GitHub Pages export
+name: Verify and deploy GitHub Pages
 
 on:
   pull_request:
@@ -9,6 +9,10 @@ on:
 
 permissions:
   contents: read
+
+env:
+  # The configured Pages custom domain serves this project at its root.
+  NEXT_PUBLIC_BASE_PATH: ""
 
 concurrency:
   group: pages-${{ github.ref }}
@@ -41,19 +45,21 @@ jobs:
         run: npm run build
       - name: Build GitHub Pages static export
         run: npm run build:pages
-      - name: Check the branch publication files
+      - name: Check the publication files
         run: |
           test -s out/index.html
           test -f out/.nojekyll
           test -d out/_next/static
-          grep -Fq '/xk-campaign-website-design/_next/static/' out/index.html
+          grep -Fq '"/_next/static/' out/index.html
+          test -s out/version.json
+          node --input-type=module -e 'import fs from "node:fs"; const v = JSON.parse(fs.readFileSync("out/version.json", "utf8")); if (v.sourceSha !== process.env.GITHUB_SHA || v.basePath !== "" || v.sourceState !== "clean") process.exit(1);'
           test ! -e out/README.md
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
       - name: Test the exported site under its Pages path
         run: npm run test:e2e
         env:
-          PLAYWRIGHT_BASE_URL: http://127.0.0.1:3000/xk-campaign-website-design/
+          PLAYWRIGHT_BASE_URL: http://127.0.0.1:3000/
           PLAYWRIGHT_SERVER_COMMAND: npm run preview:pages -- --port 3000
       - name: Save the verified static export
         if: github.ref == 'refs/heads/main'
@@ -62,3 +68,24 @@ jobs:
           name: pages-static-export
           path: out
           include-hidden-files: true
+
+  deploy:
+    name: Deploy verified Pages artifact
+    needs: verify
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Read the existing Pages configuration
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
+      - name: Deploy the verified static export
+        id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+        with:
+          artifact_name: pages-static-export

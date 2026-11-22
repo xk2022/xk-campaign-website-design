@@ -2,6 +2,7 @@
 
 import {
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
   useSyncExternalStore,
@@ -104,6 +105,51 @@ export function BriefTool() {
     }
   });
 
+  useLayoutEffect(() => {
+    const textarea = summaryTextRef.current;
+    if (summary === null || !textarea) return;
+    let disposed = false;
+    let previousWidth = textarea.getBoundingClientRect().width;
+
+    function fitSummary() {
+      if (disposed || !textarea) return;
+      // Reset to the responsive CSS minimum before measuring the full content.
+      textarea.style.minHeight = "";
+      textarea.style.height = "auto";
+      const borderHeight = textarea.offsetHeight - textarea.clientHeight;
+      const height = Math.ceil(textarea.scrollHeight + borderHeight);
+      textarea.style.minHeight = `${height}px`;
+      textarea.style.height = `${height}px`;
+    }
+
+    function fitAfterWidthChange() {
+      if (!textarea) return;
+      const width = textarea.getBoundingClientRect().width;
+      if (width !== previousWidth) {
+        previousWidth = width;
+        fitSummary();
+      }
+    }
+
+    fitSummary();
+    // Watching only width keeps manual vertical resizing available.
+    const observer = typeof ResizeObserver !== "undefined"
+      ? new ResizeObserver(fitAfterWidthChange)
+      : null;
+    observer?.observe(textarea);
+    window.addEventListener("resize", fitAfterWidthChange);
+    textarea.addEventListener("focus", fitSummary);
+    document.fonts?.addEventListener("loadingdone", fitSummary);
+    void document.fonts?.ready.then(fitSummary);
+    return () => {
+      disposed = true;
+      observer?.disconnect();
+      window.removeEventListener("resize", fitAfterWidthChange);
+      textarea.removeEventListener("focus", fitSummary);
+      document.fonts?.removeEventListener("loadingdone", fitSummary);
+    };
+  }, [summary]);
+
   function update<K extends keyof BriefDraft>(field: K, value: BriefDraft[K]) {
     setDraft((current) => ({ ...current, [field]: value }));
     setErrors((current) => ({ ...current, [field]: undefined }));
@@ -171,7 +217,7 @@ export function BriefTool() {
           你的建站需求摘要
         </h3>
         <p className="field-help">
-          這段文字可以直接轉貼，作為和 XK 討論的起點。
+          這段文字可以直接轉貼，作為和 XK 討論的起點。全文會自動展開，也可以手動選取。
         </p>
         <label className="sr-only" htmlFor="summary-text">
           需求摘要全文
@@ -183,6 +229,7 @@ export function BriefTool() {
           readOnly
           value={summary}
           rows={10}
+          style={{ overflowY: "auto", resize: "vertical" }}
         />
         <div className="summary-actions">
           <button
@@ -207,7 +254,7 @@ export function BriefTool() {
           role="status"
           aria-live="polite"
         >
-          {copyStatus === "success" && "已複製，可自行貼給 XK"}
+          {copyStatus === "success" && campaign.contactHandoff.copySuccess}
           {copyStatus === "denied" && (
             <>
               <p>瀏覽器未允許自動複製。全文已保留，請選取後手動複製。</p>
@@ -225,8 +272,12 @@ export function BriefTool() {
           )}
         </div>
         <p className="form-notice">
-          摘要不會自動送出。你可以自行決定是否分享。
+          {campaign.contactHandoff.copyHint}
         </p>
+        <aside className="contact-handoff" aria-labelledby="contact-handoff-title">
+          <h4 id="contact-handoff-title">{campaign.contactHandoff.title}</h4>
+          <p>{campaign.contactHandoff.description}</p>
+        </aside>
       </div>
     );
   }
@@ -375,11 +426,12 @@ export function BriefTool() {
                   placeholder="例如：下載產品型錄"
                   required
                   aria-invalid={!!errors.otherAction}
-                  aria-describedby={
-                    errors.otherAction ? "other-action-error" : undefined
-                  }
+                  aria-describedby={`other-action-help${errors.otherAction ? " other-action-error" : ""}`}
                   autoComplete="off"
                 />
+                <p className="field-help" id="other-action-help">
+                  短語或完整句子都可以，摘要會保留你的原話。
+                </p>
                 {errors.otherAction && (
                   <p className="field-error" id="other-action-error">
                     {errors.otherAction}

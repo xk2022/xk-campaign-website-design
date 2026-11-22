@@ -1,11 +1,11 @@
 # 頁面品質待辦與後續修復紀錄
 
 - 記錄日期：**2026-11-23（Asia/Taipei）**。
-- 問題發現／原始檢查日期：**2026-11-22**；本次為整理建檔，未重新執行整套驗收。
+- 問題發現／原始檢查日期：**2026-11-22**；初始建檔未重跑驗收；後續修復與重驗結果見本文件末尾。
 - 檢查基準：`main@b4ab66a6fc272240a6d0bfc43ef97c62d3936550`。
 - 專案：`xk2022/xk-campaign-website-design`。
 - 公開頁面：https://xk2022.github.io/xk-campaign-website-design/
-- 本文件用途：作為後續修復、改善分支及 PR 的共同待辦清單；**本次未修改網站功能、聯絡管道或 GitHub 設定**。
+- 本文件用途：作為後續修復、改善分支及 PR 的共同待辦清單；初始建檔只整理問題；本輪修復另記於文末，保留原始檢查證據。
 
 ## 使用方式
 
@@ -26,15 +26,15 @@
 | 編號 | 優先度 | 類型 | 問題／改善項目 | 狀態 | 建議分支 |
 | --- | --- | --- | --- | --- | --- |
 | XK-Q-001 | P1 | 待業務確認 | 摘要完成後缺少正式洽詢承接 | 待業務確認 | `codex/improve-xk-q-001-contact-handoff` |
-| XK-Q-002 | P1 | 已確認缺陷 | 部分小字文字對比不足 | 待處理 | `codex/bugfix-xk-q-002-contrast` |
-| XK-Q-003 | P1 | 可讀性改善 | 手機功能性說明字級偏小 | 待處理 | `codex/improve-xk-q-003-mobile-type` |
-| XK-Q-004 | P1 | 待業務確認 | 服務交付範圍說明不夠具體 | 待業務確認 | `codex/improve-xk-q-004-service-scope` |
-| XK-Q-005 | P2 | 互動改善 | 長摘要需要在文字框內另外捲動 | 待處理 | `codex/improve-xk-q-005-summary-reading` |
-| XK-Q-006 | P2 | 已確認缺陷 | 零寬空白能通過必填驗證 | 待處理 | `codex/bugfix-xk-q-006-invisible-input` |
-| XK-Q-007 | P2 | 文案／互動改善 | 自由輸入完整句子與摘要套句銜接不自然 | 待處理 | `codex/improve-xk-q-007-summary-wording` |
-| XK-Q-008 | P2 | 效能驗證 | 字型與 CSS 初載負擔值得量測及精簡 | 待驗證 | `codex/perf-xk-q-008-font-loading` |
-| XK-Q-009 | P2 | 工程設定 | Pages 發布設定、文件與版本核對不一致 | 待重新核對設定 | `codex/chore-xk-q-009-publication` |
-| XK-Q-010 | P3 | 內容改善 | 製造與活動情境的成果示意可補強 | 待業務確認 | `codex/improve-xk-q-010-scenario-proof` |
+| XK-Q-002 | P1 | 已確認缺陷 | 部分小字文字對比不足 | 待驗收 | `codex/bugfix-xk-q-002-contrast` |
+| XK-Q-003 | P1 | 可讀性改善 | 手機功能性說明字級偏小 | 待驗收 | `codex/improve-xk-q-003-mobile-type` |
+| XK-Q-004 | P1 | 待業務確認 | 服務交付範圍說明不夠具體 | 待驗收 | `codex/improve-xk-q-004-service-scope` |
+| XK-Q-005 | P2 | 互動改善 | 長摘要需要在文字框內另外捲動 | 待驗收 | `codex/improve-xk-q-005-summary-reading` |
+| XK-Q-006 | P2 | 已確認缺陷 | 零寬空白能通過必填驗證 | 待驗收 | `codex/bugfix-xk-q-006-invisible-input` |
+| XK-Q-007 | P2 | 文案／互動改善 | 自由輸入完整句子與摘要套句銜接不自然 | 待驗收 | `codex/improve-xk-q-007-summary-wording` |
+| XK-Q-008 | P2 | 效能驗證 | 字型與 CSS 初載負擔值得量測及精簡 | 待驗收 | `codex/perf-xk-q-008-font-loading` |
+| XK-Q-009 | P2 | 工程設定 | Pages 發布設定、文件與版本核對不一致 | 待驗收 | `codex/chore-xk-q-009-publication` |
+| XK-Q-010 | P3 | 內容改善 | 製造與活動情境的成果示意可補強 | 待驗收 | `codex/improve-xk-q-010-scenario-proof` |
 | XK-Q-011 | P2 | 補充驗收 | 實體手機、Safari 與 LINE 內建瀏覽器待驗證 | 待驗證 | `codex/test-xk-q-011-mobile-browsers` |
 
 ## 條列內容與驗收條件
@@ -162,3 +162,42 @@ codex/bugfix-xk-q-002-003-readability 分支。
 | 2026-11-23 | XK-Q-001–011 | 建立條列待辦、驗收條件與後續分支規則 | `codex/docs-quality-backlog-2026-11-23` | 僅文件整理，未執行功能修復或重新部署 |
 
 後續每次更新請新增一列，記錄項目、日期、實際分支／PR、測試結果，以及是否已在公開站驗證。
+
+## 2026-11-23 修復批次
+
+- 授權：使用者明確指示「直接修正上述問題，完成後直接 push and merge」，本輪處理整份清單的可實作部分；原始任務範本中的不合併限制不適用本次授權。
+- 分支：`codex/bugfix-quality-backlog-2026-11-23`，從已合併待辦 PR #4 的最新 main 開始。
+- Q001：補上摘要保存／原對話分享說明與正式管道待確認提示。2026-11-23 公司官網來源仍 `verifiedContactChannels=[]`；Cloud Chrome 實開指定 `contact/`，已轉到 `https://xplorekaleidoscope.com/lander` 網域停放頁。保留指定官方連結，但不把目的地當成可提交需求的管道。**正式承接仍待業務提供及官網恢復**；未跨 repo 修改。
+- Q002／003：加深情境數字、英文、placeholder、手機示意 eyebrow 與示意註記；將表單標題、必填／選填、輔助文字、錯誤與清空／隱私說明放大至 14–16px；行動版 toolbar 可換行。
+- Q004：按公司服務目錄與官網來源，新增可討論交付／需個案確認、準備素材與書面確認說明。來源 commit／blob／章節集中於 `serviceScope.sources`。不把討論範圍當成固定服務承諾；報價、時程、維護及權利仍逐案核定。
+- Q005：摘要依全文自動增高，寬度及字型載入變化重排；保留手動選取與安全捲動備援，避免較大文字被隱藏。
+- Q006：必填改為檢查可見內容；空白、零寬、控制與只有格式字元會被拒絕，合法中文、英文、emoji／ZWJ 原文保留。
+- Q007：「其他」動作改用獨立敘述，避免完整句子硬接在「看完後」；再次產生及複製使用最新文字。
+- Q008：自託管同字體 variable 字型，共享不同字重的 WOFF2；中文／拉丁 unicode-range 覆蓋保持完整。新增 `scripts/measure-fonts.mjs` 供同條件冷載入量測，不把本機資料稱為公開站 Core Web Vitals。
+- Q009：即時 Pages API 為 `build_type: workflow`，自訂網域 `web.xplorekaleidoscope.com`；舊站產物仍引用 repo 子路徑，Cloud Chrome 見表單停用。恢復 main-only Actions 部署驗證過的同份 artifact，CI 改用根路徑、OG 分享圖跟隨自訂網域；加入 `version.json` 供 source SHA 核對。未變更 DNS、網域、可見性或 Pages 管理設定。
+- Q010：新增製造／活動兩個輕量靜態介面示意，明示虛構與非交付實績；沒有具名客戶或可誤認為可送出的示意控制項。
+- Q011：已嘗試下載官方 WebKit 27.2（Playwright v2388）並實際啟動，但受本機缺少 `libgtk-4.so.1`、`libgraphene-1.0.so.0`、`libharfbuzz-icu.so.0`、`libmanette-0.2.so.0`、`libhyphen.so.0`、`libGLESv2.so.2` 阻擋；未略過驗證或修改 OS。**WebKit／實體 Safari／iPhone／Android／LINE 流程未驗證**，保留待驗證。
+
+### 本輪驗收與發布
+
+以下待完成後填入實際結果；CI、合併與公開站核對分開記錄。
+
+| 項目 | 本輪結果 |
+| --- | --- |
+| Node.js 24 下 npm ci / lint / typecheck | 通過 |
+| npm test | 31／31 通過 |
+| npm run build / npm run build:pages | 通過；Pages 根路徑產物 |
+| Chromium 六寬度／流程／長摘要／放大文字 | 根路徑 23／23、repo 子路徑 23／23 通過；最終語意修正另經 lint/typecheck/Pages build/axe 複核 |
+| axe／人工對比檢查 | 375／1440px 表單／摘要均 0 自動違規；6 個複雜示意對比節點依下節人工補驗 |
+| 字型前後同條件量測 | 31 → 15 請求，1,052,728 → 963,216 B；CSS 370,561 → 138,748 B，載入窗口 lab CLS 均 0；非 field CWV |
+| PR / main CI / 合併 / 部署 / 公開版 SHA | 待本輪完成後記錄 |
+
+### Q002 對比與示意背景人工複核
+
+- 測試工具：axe-core 4.14.1，本機靜態根路徑，375／1440px，分別在表單及產生摘要後掃描。
+- 情境數字／英文與 placeholder：`#667085` 對白底 **4.97:1**、對 surface `#F5F7FB` **4.64:1**；手機 eyebrow `#536A7B` 對白底 **5.65:1**。
+- `preview-topline` 與示意 `figcaption`：`#46546E` 對底色 `#EDF2FC` **6.79:1**；即使保守取比實際格線合成更深的實色 `#C9D4EC` 仍 **5.12:1**，不依賴格線位置恰巧留白。
+- `phone-art-label`：白字疊 80% `#28465A` 遮罩；即使底圖全白，合成約 `#536B7B`，對比 **5.59:1**。
+- `phone-cta`：白字對 `#3157D5` 為 **6.08:1**。375px 原先浮動卡靠近文字，已調整卡片位置與手機示意底部留白；375／1440px 截圖確認「導航到店」全文可見。
+- `phone-status` 與 `phone-menu` 為標示虛構介面的裝飾；不是實際互動控件／訪客需操作的時間或選單，狀態列亦 `aria-hidden`。裝飾排除不等於宣稱 aria-hidden 會自動符合 WCAG；實看 notch 與功能內容沒有遮擋。
+- axe 對圖層／旋轉／格線仍可能列為 incomplete，以上人工計算與檢視補足其適用範圍；不把零自動違規解讀為全站無障礙保證。

@@ -52,13 +52,24 @@ export function toggleMaterial(
   return [...materials.filter((item) => item !== "尚未準備"), material];
 }
 
+// Check for visible information without rewriting the visitor's actual text.
+// Joiners and variation selectors alone are empty; emoji that use them stay valid.
+export function hasVisibleContent(value: string): boolean {
+  return value.replace(
+    /[\p{White_Space}\p{Default_Ignorable_Code_Point}\p{Cc}]/gu,
+    "",
+  ).length > 0;
+}
+
 export function validateBrief(draft: BriefDraft): BriefErrors {
   const errors: BriefErrors = {};
-  if (!draft.brand.trim()) errors.brand = "請填品牌或專案名稱，暫名也可以。";
-  if (!draft.audience.trim())
+  if (!hasVisibleContent(draft.brand))
+    errors.brand = "請填品牌或專案名稱，暫名也可以。";
+  if (!hasVisibleContent(draft.audience))
     errors.audience = "請用白話描述，這一頁主要想給誰看。";
-  if (!draft.action.trim()) errors.action = "請選一個最希望訪客完成的動作。";
-  if (draft.action === "其他" && !draft.otherAction.trim())
+  if (!hasVisibleContent(draft.action))
+    errors.action = "請選一個最希望訪客完成的動作。";
+  if (draft.action === "其他" && !hasVisibleContent(draft.otherAction))
     errors.otherAction = "請填寫你希望訪客完成的動作。";
   return errors;
 }
@@ -71,10 +82,10 @@ const actionPhrases: Record<string, string> = {
 };
 
 export function generateSummary(draft: BriefDraft): string {
-  const action =
+  const actionSentence =
     draft.action === "其他"
-      ? draft.otherAction.trim()
-      : (actionPhrases[draft.action] ?? draft.action.trim());
+      ? `希望訪客完成的主要動作：${draft.otherAction.trim()}`
+      : `最希望訪客看完後${actionPhrases[draft.action] ?? draft.action.trim()}。`;
   const scenario =
     draft.scenario === "other"
       ? "其他"
@@ -85,7 +96,7 @@ export function generateSummary(draft: BriefDraft): string {
     materials = `目前已有 ${draft.materials.join("、")}。`;
   return [
     `我想替${draft.brand.trim()}做一頁式網站，主要給${draft.audience.trim()}看。`,
-    `最希望訪客看完後${action}。`,
+    actionSentence,
     ...(scenario ? [`使用情境是${scenario}。`] : []),
     materials,
     ...(draft.notes.trim() ? [`另外想補充：${draft.notes.trim()}`] : []),

@@ -1,7 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 
 const shareImage = "brand/xk-logo-primary.png";
-const pagesUrl = "https://xk2022.github.io/xk-campaign-website-design/";
+const pagesUrl = "https://web.xplorekaleidoscope.com/";
 
 const brand = (page: Page) => page.getByLabel(/品牌或專案名稱/);
 const audience = (page: Page) => page.getByLabel(/想給誰看/);
@@ -52,6 +52,7 @@ for (const width of [375, 390, 768, 1024, 1280, 1440]) {
     const textarea = await summary(page).evaluate((element: HTMLTextAreaElement) => ({ width: element.clientWidth, scrollWidth: element.scrollWidth, height: element.clientHeight, scrollHeight: element.scrollHeight, value: element.value }));
     expect(textarea.scrollWidth).toBeLessThanOrEqual(textarea.width + 1);
     expect(textarea.scrollHeight).toBeGreaterThan(100);
+    expect(textarea.scrollHeight).toBeLessThanOrEqual(textarea.height + 1);
     expect(textarea.value).toContain("LongBrandNameWithoutSpaces");
     await assertNoOverflow(page);
     await captureFullPage(page, testInfo.outputPath(`summary-${width}.png`));
@@ -116,7 +117,95 @@ test("直接填表：必填純空白、其他動作驗證與第一錯誤焦點",
   await expect(page.getByLabel(/其他主要動作/)).toBeFocused();
   await page.getByLabel(/其他主要動作/).fill("下載產品型錄");
   await generate(page).click();
-  await expect(summary(page)).toHaveValue(/看完後下載產品型錄/);
+  await expect(summary(page)).toHaveValue(/希望訪客完成的主要動作：下載產品型錄/);
+});
+
+test("不可見必填文字被拒絕，完整句動作及 emoji 品牌保留原意", async ({ page }) => {
+  await load(page);
+  await brand(page).fill("\u200b\u2060");
+  await audience(page).fill("\u200d\u200e");
+  await action(page).selectOption("其他");
+  await page.getByLabel(/其他主要動作/).fill("\u200b");
+  await generate(page).click();
+  await expect(brand(page)).toBeFocused();
+  await expect(brand(page)).toHaveAttribute("aria-invalid", "true");
+  await expect(audience(page)).toHaveAttribute("aria-invalid", "true");
+  await expect(page.getByLabel(/其他主要動作/)).toHaveAttribute("aria-invalid", "true");
+  await brand(page).fill("👩‍👩‍👦 山角工作室");
+  await audience(page).fill("正在比較服務的店家");
+  await page.getByLabel(/其他主要動作/).fill("我想讓客人下載型錄");
+  await generate(page).click();
+  await expect(summary(page)).toHaveValue(/👩‍👩‍👦 山角工作室/);
+  await expect(summary(page)).toHaveValue(/希望訪客完成的主要動作：我想讓客人下載型錄/);
+  await expect(summary(page)).not.toHaveValue(/看完後我想讓/);
+});
+
+test("長摘要在切換寬度後仍顯示全文，手動選取涵蓋末段", async ({ page }) => {
+  await page.setViewportSize({ width: 768, height: 900 });
+  await load(page);
+  await page.getByRole("button", { name: "帶入示範資料" }).click();
+  await notes(page).fill("希望先看作品，再帶尺寸詢問。\n".repeat(35) + "這是摘要最後一段。");
+  await generate(page).click();
+  for (const width of [768, 375, 1440, 390]) {
+    await page.setViewportSize({ width, height: 900 });
+    await expect.poll(() => summary(page).evaluate((element: HTMLTextAreaElement) => element.scrollHeight - element.clientHeight)).toBeLessThanOrEqual(1);
+    await assertNoOverflow(page);
+  }
+  await summary(page).focus();
+  await summary(page).press("ControlOrMeta+A");
+  expect(await summary(page).evaluate((element: HTMLTextAreaElement) => element.value.slice(element.selectionStart, element.selectionEnd))).toBe(await summary(page).inputValue());
+});
+
+test("手機表單功能性說明至少14px，放大文字後仍可操作及換行", async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 812 });
+  await load(page);
+  for (const selector of [".field-label", ".field-meta", ".field-help", ".form-notice", ".form-required-note", ".text-button"]) {
+    const sizes = await page.locator(selector).evaluateAll((elements) => elements.map((element) => parseFloat(getComputedStyle(element).fontSize)));
+    expect(sizes.length).toBeGreaterThan(0);
+    expect(Math.min(...sizes)).toBeGreaterThanOrEqual(14);
+  }
+  // Double the form's actual text sizes to exercise wrapping and reflow.
+  await page.locator(".brief-tool").evaluate((tool) => {
+    const elements = [...tool.querySelectorAll<HTMLElement>("*")];
+    const sizes = elements.map((element) => parseFloat(getComputedStyle(element).fontSize));
+    elements.forEach((element, index) => { element.style.fontSize = `${sizes[index] * 2}px`; });
+  });
+  await assertNoOverflow(page);
+  await page.getByRole("button", { name: "帶入示範資料" }).click();
+  await generate(page).click();
+  await expect(summary(page)).toHaveValue(/山角木作工作室/);
+});
+
+test("摘要產生後同寬放大文字，仍可讀取及選取最後一段", async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 812 });
+  await load(page);
+  await page.getByRole("button", { name: "帶入示範資料" }).click();
+  await notes(page).fill("需要先看完整內容。".repeat(30) + "最後一段也要保留。");
+  await generate(page).click();
+  await summary(page).evaluate((element: HTMLTextAreaElement) => { element.style.fontSize = "32px"; });
+  await summary(page).focus();
+  const dimensions = await summary(page).evaluate((element: HTMLTextAreaElement) => ({
+    hidden: getComputedStyle(element).overflowY === "hidden",
+    overflow: element.scrollHeight > element.clientHeight + 1,
+  }));
+  expect(dimensions.hidden && dimensions.overflow).toBe(false);
+  await summary(page).press("ControlOrMeta+A");
+  expect(await summary(page).evaluate((element: HTMLTextAreaElement) => element.value.slice(element.selectionStart, element.selectionEnd))).toContain("最後一段也要保留。");
+  await assertNoOverflow(page);
+});
+
+test("靜態產物版本可對照來源與實際掛載路徑", async ({ request, baseURL }) => {
+  test.skip(!process.env.PLAYWRIGHT_SERVER_COMMAND?.includes("preview:pages"), "version.json 僅由 Pages 靜態建置產生");
+  const response = await request.get(new URL("version.json", baseURL!).href);
+  expect(response.status()).toBe(200);
+  const version = await response.json();
+  expect(version.basePath).toBe(new URL(baseURL!).pathname.replace(/\/$/, ""));
+  expect(version.sourceSha).toMatch(/^[a-f0-9]{40}$/);
+  expect(Number.isNaN(Date.parse(version.builtAt))).toBe(false);
+  if (process.env.GITHUB_SHA) {
+    expect(version.sourceSha).toBe(process.env.GITHUB_SHA);
+    expect(version.sourceState).toBe("clean");
+  }
 });
 
 test("已有素材可複選且尚未準備雙向互斥", async ({ page }) => {
@@ -253,7 +342,7 @@ test("JavaScript 尚未啟用時停用送出，草稿不會被原生表單帶入
   await context.close();
 });
 
-test("子路徑上的正式 Logo、圖示與分享圖可載入，沒有資產 404", async ({ page, request, baseURL }) => {
+test("部署路徑上的正式 Logo、圖示與分享圖可載入，沒有資產 404", async ({ page, request, baseURL }) => {
   const failedAssets: string[] = [];
   page.on("response", (response) => {
     if (response.status() >= 400 && ["image", "stylesheet", "script", "font"].includes(response.request().resourceType())) {

@@ -64,6 +64,39 @@ describe("建站需求整理工具", () => {
     expect(screen.queryByLabelText("需求摘要全文")).not.toBeInTheDocument();
   });
 
+  it("拒絕不可見必填內容，依序聚焦第一個尚未補好的欄位", () => {
+    render(<BriefTool />);
+    fireEvent.change(screen.getByLabelText(/品牌或專案名稱/), {
+      target: { value: " \u200b\u2060 " },
+    });
+    fireEvent.change(screen.getByLabelText(/想給誰看/), {
+      target: { value: "\u200d\ufe0f" },
+    });
+    fireEvent.change(screen.getByLabelText(/希望訪客做什麼/), {
+      target: { value: "其他" },
+    });
+    fireEvent.change(screen.getByLabelText(/其他主要動作/), {
+      target: { value: "\u200b\u0000" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "產生需求摘要" }));
+    expect(screen.getByLabelText(/品牌或專案名稱/)).toHaveFocus();
+    expect(screen.getByLabelText(/品牌或專案名稱/)).toHaveAttribute("aria-invalid", "true");
+    expect(screen.getByLabelText(/想給誰看/)).toHaveAttribute("aria-invalid", "true");
+    expect(screen.getByLabelText(/其他主要動作/)).toHaveAttribute("aria-invalid", "true");
+
+    fireEvent.change(screen.getByLabelText(/品牌或專案名稱/), {
+      target: { value: "👩‍💻 工作室" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "產生需求摘要" }));
+    expect(screen.getByLabelText(/想給誰看/)).toHaveFocus();
+    fireEvent.change(screen.getByLabelText(/想給誰看/), {
+      target: { value: "正在規劃網站的店主" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "產生需求摘要" }));
+    expect(screen.getByLabelText(/其他主要動作/)).toHaveFocus();
+    expect(screen.queryByLabelText("需求摘要全文")).not.toBeInTheDocument();
+  });
+
   it("示範 → 摘要 → 返回改動作 → 再產生及複製，都使用最新資料", async () => {
     const writeText = vi.fn().mockResolvedValue(undefined);
     Object.defineProperty(navigator, "clipboard", {
@@ -96,6 +129,76 @@ describe("建站需求整理工具", () => {
       ),
     );
     expect(writeText).toHaveBeenCalledWith(summary);
+  });
+
+  it("其他動作從短語改為完整句子後，摘要及複製保留最新原話", async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, "clipboard", {
+      configurable: true,
+      value: { writeText },
+    });
+    render(<BriefTool />);
+    fireEvent.click(screen.getByRole("button", { name: "帶入示範資料" }));
+    fireEvent.change(screen.getByLabelText(/希望訪客做什麼/), {
+      target: { value: "其他" },
+    });
+    fireEvent.change(screen.getByLabelText(/其他主要動作/), {
+      target: { value: "下載型錄" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "產生需求摘要" }));
+    expect((screen.getByLabelText("需求摘要全文") as HTMLTextAreaElement).value)
+      .toContain("希望訪客完成的主要動作：下載型錄");
+    fireEvent.click(screen.getByRole("button", { name: "返回修改" }));
+    fireEvent.change(screen.getByLabelText(/其他主要動作/), {
+      target: { value: "我想讓客人下載型錄。" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "產生需求摘要" }));
+    const summary = (screen.getByLabelText("需求摘要全文") as HTMLTextAreaElement).value;
+    expect(summary.split("\n")[1]).toBe("希望訪客完成的主要動作：我想讓客人下載型錄。");
+    fireEvent.click(screen.getByRole("button", { name: "複製需求摘要" }));
+    await waitFor(() => expect(writeText).toHaveBeenCalledWith(summary));
+  });
+
+  it("長摘要依全文高度展開，聚焦及重排後重新量高，拒絕複製仍可選取全文", async () => {
+    const scrollHeight = vi.spyOn(Element.prototype, "scrollHeight", "get").mockReturnValue(880);
+    let width = 700;
+    const bounds = vi.spyOn(Element.prototype, "getBoundingClientRect")
+      .mockImplementation(() => ({ width } as DOMRect));
+    Object.defineProperty(navigator, "clipboard", {
+      configurable: true,
+      value: { writeText: vi.fn().mockRejectedValue(new Error("denied")) },
+    });
+    try {
+      render(<BriefTool />);
+      fireEvent.click(screen.getByRole("button", { name: "帶入示範資料" }));
+      const notes = "希望客人能先了解作品的尺寸、材質及使用方式，再整理需求來詢問。".repeat(20);
+      fireEvent.change(screen.getByLabelText(/想補充的事/), { target: { value: notes } });
+      fireEvent.click(screen.getByRole("button", { name: "產生需求摘要" }));
+      const textarea = screen.getByLabelText("需求摘要全文") as HTMLTextAreaElement;
+      expect(textarea.value).toContain(notes);
+      expect(textarea.style.height).toBe("880px");
+      expect(textarea.style.minHeight).toBe("880px");
+      expect(textarea.style.resize).toBe("vertical");
+      expect(textarea.style.overflowY).toBe("auto");
+
+      scrollHeight.mockReturnValue(1300);
+      fireEvent.focus(textarea);
+      expect(textarea.style.height).toBe("1300px");
+      expect(textarea.style.minHeight).toBe("1300px");
+
+      scrollHeight.mockReturnValue(1600);
+      width = 330;
+      fireEvent(window, new Event("resize"));
+      expect(textarea.style.height).toBe("1600px");
+      expect(textarea.style.minHeight).toBe("1600px");
+      fireEvent.click(screen.getByRole("button", { name: "複製需求摘要" }));
+      await waitFor(() => expect(screen.getByRole("status")).toHaveTextContent("瀏覽器未允許自動複製"));
+      fireEvent.click(screen.getByRole("button", { name: "選取摘要全文" }));
+      expect(textarea.selectionEnd - textarea.selectionStart).toBe(textarea.value.length);
+    } finally {
+      scrollHeight.mockRestore();
+      bounds.mockRestore();
+    }
   });
 
   it("剪貼簿被拒後保留全文、提供手動選取且不顯示成功", async () => {

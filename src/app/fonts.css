@@ -1,0 +1,9 @@
+/*
+ * The XK brand fonts remain Inter and Noto Sans TC, self-hosted as variable
+ * WOFF2 fonts. Each Unicode subset is shared across weights 100–900 instead
+ * of downloading separate files for 400, 500 and 700. Import the complete
+ * Noto Sans TC subset declarations so user-entered Traditional Chinese is
+ * not restricted to the campaign's current copy.
+ */
+@import "@fontsource-variable/inter/wght.css";
+@import "@fontsource-variable/noto-sans-tc/wght.css";
