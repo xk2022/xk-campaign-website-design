@@ -26,15 +26,15 @@
 | 編號 | 優先度 | 類型 | 問題／改善項目 | 狀態 | 建議分支 |
 | --- | --- | --- | --- | --- | --- |
 | XK-Q-001 | P1 | 待業務確認 | 摘要完成後缺少正式洽詢承接 | 待業務確認 | `codex/improve-xk-q-001-contact-handoff` |
-| XK-Q-002 | P1 | 已確認缺陷 | 部分小字文字對比不足 | 待驗收 | `codex/bugfix-xk-q-002-contrast` |
-| XK-Q-003 | P1 | 可讀性改善 | 手機功能性說明字級偏小 | 待驗收 | `codex/improve-xk-q-003-mobile-type` |
-| XK-Q-004 | P1 | 待業務確認 | 服務交付範圍說明不夠具體 | 待驗收 | `codex/improve-xk-q-004-service-scope` |
-| XK-Q-005 | P2 | 互動改善 | 長摘要需要在文字框內另外捲動 | 待驗收 | `codex/improve-xk-q-005-summary-reading` |
-| XK-Q-006 | P2 | 已確認缺陷 | 零寬空白能通過必填驗證 | 待驗收 | `codex/bugfix-xk-q-006-invisible-input` |
-| XK-Q-007 | P2 | 文案／互動改善 | 自由輸入完整句子與摘要套句銜接不自然 | 待驗收 | `codex/improve-xk-q-007-summary-wording` |
-| XK-Q-008 | P2 | 效能驗證 | 字型與 CSS 初載負擔值得量測及精簡 | 待驗收 | `codex/perf-xk-q-008-font-loading` |
-| XK-Q-009 | P2 | 工程設定 | Pages 發布設定、文件與版本核對不一致 | 待驗收 | `codex/chore-xk-q-009-publication` |
-| XK-Q-010 | P3 | 內容改善 | 製造與活動情境的成果示意可補強 | 待驗收 | `codex/improve-xk-q-010-scenario-proof` |
+| XK-Q-002 | P1 | 已確認缺陷 | 部分小字文字對比不足 | 已發布並驗證 | `codex/bugfix-xk-q-002-contrast` |
+| XK-Q-003 | P1 | 可讀性改善 | 手機功能性說明字級偏小 | 已發布並驗證 | `codex/improve-xk-q-003-mobile-type` |
+| XK-Q-004 | P1 | 待業務確認 | 服務交付範圍說明不夠具體 | 已發布並驗證 | `codex/improve-xk-q-004-service-scope` |
+| XK-Q-005 | P2 | 互動改善 | 長摘要需要在文字框內另外捲動 | 已發布並驗證 | `codex/improve-xk-q-005-summary-reading` |
+| XK-Q-006 | P2 | 已確認缺陷 | 零寬空白能通過必填驗證 | 已發布並驗證 | `codex/bugfix-xk-q-006-invisible-input` |
+| XK-Q-007 | P2 | 文案／互動改善 | 自由輸入完整句子與摘要套句銜接不自然 | 已發布並驗證 | `codex/improve-xk-q-007-summary-wording` |
+| XK-Q-008 | P2 | 效能驗證 | 字型與 CSS 初載負擔值得量測及精簡 | 已發布並驗證 | `codex/perf-xk-q-008-font-loading` |
+| XK-Q-009 | P2 | 工程設定 | Pages 發布設定、文件與版本核對不一致 | 已發布並驗證 | `codex/chore-xk-q-009-publication` |
+| XK-Q-010 | P3 | 內容改善 | 製造與活動情境的成果示意可補強 | 已發布並驗證 | `codex/improve-xk-q-010-scenario-proof` |
 | XK-Q-011 | P2 | 補充驗收 | 實體手機、Safari 與 LINE 內建瀏覽器待驗證 | 待驗證 | `codex/test-xk-q-011-mobile-browsers` |
 
 ## 條列內容與驗收條件
@@ -180,7 +180,7 @@ codex/bugfix-xk-q-002-003-readability 分支。
 
 ### 本輪驗收與發布
 
-以下待完成後填入實際結果；CI、合併與公開站核對分開記錄。
+以下為本輪實際結果；CI、合併與公開站核對分開記錄。Q004 的已完成範圍為討論內容說明，不表示個別商業條件已核定。
 
 | 項目 | 本輪結果 |
 | --- | --- |
@@ -190,7 +190,7 @@ codex/bugfix-xk-q-002-003-readability 分支。
 | Chromium 六寬度／流程／長摘要／放大文字 | 根路徑 23／23、repo 子路徑 23／23 通過；最終語意修正另經 lint/typecheck/Pages build/axe 複核 |
 | axe／人工對比檢查 | 375／1440px 表單／摘要均 0 自動違規；6 個複雜示意對比節點依下節人工補驗 |
 | 字型前後同條件量測 | 31 → 15 請求，1,052,728 → 963,216 B；CSS 370,561 → 138,748 B，載入窗口 lab CLS 均 0；非 field CWV |
-| PR / main CI / 合併 / 部署 / 公開版 SHA | 待本輪完成後記錄 |
+| PR / main CI / 合併 / 部署 / 公開版 SHA | PR #5 最新 head CI 通過並已合併；main verify + deploy 均成功；公開 SHA 與下節來源一致 |
 
 ### Q002 對比與示意背景人工複核
 
@@ -201,3 +201,27 @@ codex/bugfix-xk-q-002-003-readability 分支。
 - `phone-cta`：白字對 `#3157D5` 為 **6.08:1**。375px 原先浮動卡靠近文字，已調整卡片位置與手機示意底部留白；375／1440px 截圖確認「導航到店」全文可見。
 - `phone-status` 與 `phone-menu` 為標示虛構介面的裝飾；不是實際互動控件／訪客需操作的時間或選單，狀態列亦 `aria-hidden`。裝飾排除不等於宣稱 aria-hidden 會自動符合 WCAG；實看 notch 與功能內容沒有遮擋。
 - axe 對圖層／旋轉／格線仍可能列為 incomplete，以上人工計算與檢視補足其適用範圍；不把零自動違規解讀為全站無障礙保證。
+
+## 2026-11-23 發布驗證紀錄
+
+| 階段 | 實際結果／證據 |
+| --- | --- |
+| 修復分支來源 | `codex/bugfix-quality-backlog-2026-11-23`，head `87906140ea255288dea3f1833b6d6c6a44afcb2f` |
+| PR／合併 | [PR #5](https://github.com/xk2022/xk-campaign-website-design/pull/5) 已 squash 合併；main 來源 `a2e3bedbf6cca59cec0530d13bae6d8a639198d9` |
+| PR CI | [45053097155](https://github.com/xk2022/xk-campaign-website-design/actions/runs/45053097155) 通過；部署 job 如預期跳過 |
+| main 驗證與部署 | [45053375629](https://github.com/xk2022/xk-campaign-website-design/actions/runs/45053375629) 的 `Validate and build`、`Deploy verified Pages artifact` 均成功；部署同份 `pages-static-export` |
+| 公開版本 | `https://web.xplorekaleidoscope.com/version.json` 回傳 sourceSha `a2e3bedbf6cca59cec0530d13bae6d8a639198d9`、sourceState `clean`、basePath 空字串；建置時間 `2026-11-22T18:09:12.152Z`（UTC，臺北為 2026-11-23） |
+| 公開站實際瀏覽 | Cloud Chrome 開啟 `https://web.xplorekaleidoscope.com/`，CSS、Logo 與表單正常；新製造／活動示意、交付討論內容與聯絡提醒皆可見 |
+| 公開站主要流程 | 實際執行示範 → 摘要 → 返回修改 → 其他動作「我想讓客人下載型錄」→ 再產生 → 複製，觀察最新全文及「已複製，可自行貼給 XK」成功狀態 |
+| 公開資產／索引 | 正式 Logo 水平版／符號版 SVG、OG PNG、favicon、robots.txt 均 HTTP 200／正確 MIME；OG 圖片使用自訂網域根路徑，robots meta 保持 `noindex, nofollow` |
+| gh-pages | 本輪不適用；目前為 Actions 發布，未以更新歷史成品分支代替部署 |
+| 本機預覽 | 根路徑靜態預覽 `http://127.0.0.1:3007/`；完整啟動及 repo 子路徑回歸命令見 README |
+
+此紀錄描述 PR #5 的功能版本。後續純文件更新的 main SHA 可能不同；每次部署以對應 Actions run 與公開 `version.json` 核對，不要求永久與本列歷史 SHA 相同。
+
+| 日期（Asia/Taipei） | 項目 | 動作與狀態 | 分支／PR | 驗證與發布 |
+| --- | --- | --- | --- | --- |
+| 2026-11-23 | XK-Q-002–010；Q001 可實作部分 | 修復、內容補強、字型量測及根路徑 Actions 自動部署 | `codex/bugfix-quality-backlog-2026-11-23`／PR #5 | Node24 全套命令、31 unit、23 Chromium tests、axe + 人工補驗；main 部署成功及公開來源 SHA 核對通過 |
+| 2026-11-23 | XK-Q-001／011 | 保存／交付提示已上線；正式官網與聯絡管道、實體／WebKit 驗收仍未完成 | 本紀錄 | 官網 repo／DNS 未修改；缺乏正式管道及可用裝置／WebKit 系統函式庫，保留待辦，不標為全數完成 |
+
+後續優先處理：由官網維護者恢復正確自訂網域路由及資產，並由 XK 確認可公開的聯絡管道；取得實機後依 Q011 記錄裝置、OS、瀏覽器／LINE 版本與實測結果。以上不影響本次廣告頁修復版本已發布的事實。

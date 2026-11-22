@@ -95,6 +95,8 @@ NEXT_PUBLIC_BASE_PATH="" npm run preview:pages -- --port 3007
 | `src/app/layout.tsx`、`src/app/icon.svg`、`src/app/robots.txt` | `zh-Hant`、title、description、Open Graph 分享圖、favicon 及預覽索引設定 |
 | `src/app/globals.css`、`src/app/fonts.css` | 手機優先版面、品牌視覺、表單、換行與可見焦點、減少動態偏好 |
 | `src/config/campaign.ts` | **品牌名稱／正式 Logo 路徑／色票／字型、情境、動作、素材、外部網址與案例公開策略** |
+| `src/components/scenario-examples.tsx` | Server Component：製造／活動的靜態虛構介面示意 |
+| `scripts/measure-fonts.mjs` | 可重現的冷 Chromium 字型／CSS 載入量測 |
 | `src/components/phone-preview.tsx` | Server Component：自行設計的手機頁面與店面向量插畫，明示「介面示意」及虛構品牌 |
 | `src/components/scenario-start.tsx` | Client Component：情境選取、定位表單與情境欄焦點 |
 | `src/components/brief-tool.tsx` | Client Component：記憶體草稿、驗證、摘要、複製／拒絕複製與返回修改 |
@@ -214,3 +216,9 @@ node scripts/measure-fonts.mjs http://127.0.0.1:3007/
 ```
 
 Q011 補充環境：官方 Playwright WebKit 27.2 已下載，實際啟動受本機缺少 GTK4、Graphene、Harfbuzz ICU、Manette、Hyphen、GLESv2 系統函式庫阻擋，未執行頁面流程。未停用安全檢查或以 Chromium 代稱 Safari。**實體 iPhone／Android、Safari 與 LINE 內建瀏覽器仍待實機驗收**；裝置／OS／瀏覽器版本、日期與必測路徑列在品質待辦 Q011。
+
+### 本輪發布結果
+
+2026-11-23 已合併 [修復 PR #5](https://github.com/xk2022/xk-campaign-website-design/pull/5)。[main Actions 45053375629](https://github.com/xk2022/xk-campaign-website-design/actions/runs/45053375629) 驗證與部署均成功，公開 `version.json` 已核對來源 `a2e3bedbf6cca59cec0530d13bae6d8a639198d9`、`clean`、空 basePath。Cloud Chrome 實際走完示範、返回修改其他動作、重新產生及複製，觀察最新摘要與成功提示；品牌資產、分享圖、favicon 與 robots.txt 均正常。
+
+詳細分階段結果與日期保留在 [品質待辦的發布紀錄](doc/02_quality_backlog_2026-11-23.md)。這是 PR #5 功能版本的歷史紀錄；後續純文件部署另有來源 SHA，以該次 Actions 與公開版本檔為準。Q001 正式官網／聯絡承接及 Q011 實機／WebKit 驗收仍保留待辦。
