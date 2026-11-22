@@ -16,18 +16,36 @@ export const campaign = {
       muted: "#667085",
       border: "#E4E8F0",
     },
-    fonts: { latin: "Inter", traditionalChinese: "Noto Sans TC" },
+    fonts: {
+      latin: "Inter Variable",
+      traditionalChinese: "Noto Sans TC Variable",
+    },
   },
   service: "一頁式網站建置",
   title: "一頁式網站建置｜Xplore Kaleidoscope（XK）",
   description:
     "從看菜單、找門市，到詢價、報名，XK 協助你把服務整理成手機上就能用的一頁。先用需求整理工具，產生並複製可直接討論的建站需求。",
-  pagesPreviewUrl: "https://xk2022.github.io/xk-campaign-website-design/",
+  pagesPreviewUrl: "https://web.xplorekaleidoscope.com/",
   links: {
     home: "https://xk2022.github.io/xk-website/",
     services: "https://xk2022.github.io/xk-website/services/",
     portfolio: "https://xk2022.github.io/xk-website/portfolio/",
     contact: "https://xk2022.github.io/xk-website/contact/",
+  },
+  contactHandoff: {
+    status: "pending",
+    verifiedAt: "2026-11-23",
+    title: "正式聯絡管道確認中",
+    description:
+      "先複製並自行保存摘要。若你已透過介紹或既有對話認識 XK，可自行貼回原對話。官網聯絡頁目前導向網域停放頁，首次接觸請待官網恢復並公布正式管道後再洽詢。",
+    copySuccess: "已複製，可自行貼給 XK",
+    copyHint: "複製不會送出需求，正式聯絡管道確認後再自行提供。",
+    source: {
+      url: "https://github.com/xk2022/xk-website/blob/c124954582edc2af3a24c187c1c937a73035a851/src/config/contact.ts",
+      blobSha: "121ba6506ba5420c6d699e6ef8e67725f7188f92",
+      verification: "source-and-browser-redirect",
+      browserResult: "官網 contact/ 轉址至 https://xplorekaleidoscope.com/lander（網域停放頁）",
+    },
   },
   // 本廣告頁不呈現具名案例或「查看展示」；避免把自主展示當作客戶實績。
   casePublication: { showNamedCases: false, displayLinks: [] as string[] },
@@ -91,5 +109,70 @@ export const cooperationSteps = [
   {
     title: "預覽與驗收",
     description: "在手機和桌面實際操作，核對內容與連結。",
+  },
+] as const;
+
+/** 可討論方向，並非固定方案或自動包含的交付承諾。 */
+export const serviceScope = {
+  title: "先確認這一頁，要交付什麼。",
+  description:
+    "從內容、手機畫面到訪客下一步，先列出要做的事，再確認實際交付範圍。",
+  discussTitle: "可以一起討論的交付",
+  discuss: [
+    "把你提供的品牌、服務與素材，整理成一頁的內容順序。",
+    "適合手機與桌面瀏覽的版面，以及約定的互動與外連入口。",
+    "基礎頁面標題與描述、操作驗收，以及原始碼、交接說明與部署協助的範圍。",
+  ],
+  confirmTitle: "需要依個案確認",
+  confirm: [
+    "文案撰寫、翻譯、攝影，以及額外素材製作與修改次數。",
+    "網域與主機、第三方費用、資料收集或系統串接的需求與責任。",
+    "交付項目、原始碼權利、報價、時程，以及上線後維護與更新方式。",
+  ],
+  preparation:
+    "你可以先準備 Logo、照片、現有文案、社群或既有網站連結；尚未備齊，也可以在需求摘要中註明。",
+  note: "實際交付與合作條件以雙方確認的內容為準。",
+  sources: [
+    {
+      url: "https://github.com/xk2022/xplore-kaleidoscope/blob/dca3329c556bdd88113181384543b5923e25618b/doc/01_business-plan/week-01/02_service-catalog.md",
+      blobSha: "99babf871dda0cf5537fecb00a20f9638f3f6f60",
+      sections: [
+        "3. S01 — Website Development",
+        "9. Commercial Terms",
+        "10. Service Exclusions",
+        "11. S05 — Maintenance Services",
+      ],
+    },
+    {
+      url: "https://github.com/xk2022/xk-website/blob/c124954582edc2af3a24c187c1c937a73035a851/src/config/services.ts",
+      blobSha: "a38450ed4d1112c81ca383f1dc4dade1d368c7f1",
+      sections: ["website-development", "servicesPage.process", "serviceProcessSteps"],
+    },
+  ],
+} as const;
+
+/** 自行設計的靜態介面示意；不代表真實品牌、可送出的功能或客戶實績。 */
+export const scenarioExamples = [
+  {
+    id: "business",
+    label: "製造與企業服務",
+    title: "讓用途，成為詢價的起點。",
+    brand: "微型加工服務（虛構）",
+    heading: "先找接近你需求的加工類別",
+    options: ["保護膜模切", "工業標籤", "其他加工"],
+    detailLabel: "詢價前可以整理",
+    detail: "用途、材料、尺寸與預估數量；還不確定的規格也能註明。",
+    action: "整理詢價需求",
+  },
+  {
+    id: "campaign",
+    label: "品牌與活動推廣",
+    title: "讓活動資訊，接上參與的下一步。",
+    brand: "週末品牌體驗（虛構）",
+    heading: "先看看哪種參與方式適合你",
+    options: ["個人參與", "企業包場", "想先詢問"],
+    detailLabel: "報名前先看清楚",
+    detail: "活動內容、日期與地點，依主辦方確認資訊刊登。",
+    action: "確認入口後前往報名",
   },
 ] as const;

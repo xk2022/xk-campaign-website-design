@@ -11,10 +11,16 @@ import {
   Copy,
   MessageSquare,
 } from "lucide-react";
-import { campaign, scenarios, cooperationSteps } from "@/config/campaign";
+import {
+  campaign,
+  scenarios,
+  cooperationSteps,
+  serviceScope,
+} from "@/config/campaign";
 import { PhonePreview } from "@/components/phone-preview";
 import { ScenarioStart } from "@/components/scenario-start";
 import { BriefTool } from "@/components/brief-tool";
+import { ScenarioExamples } from "@/components/scenario-examples";
 
 const scenarioIcons = [Store, Shapes, Ticket];
 
@@ -155,6 +161,7 @@ export default function Home() {
               );
             })}
           </div>
+          <ScenarioExamples />
         </section>
         <section
           id="process"
@@ -193,6 +200,36 @@ export default function Home() {
                 </li>
               ))}
             </ol>
+          </div>
+          <div
+            className="container service-scope"
+            role="group"
+            aria-labelledby="service-scope-title"
+          >
+            <div className="service-scope-heading">
+              <h3 id="service-scope-title">{serviceScope.title}</h3>
+              <p>{serviceScope.description}</p>
+            </div>
+            <div className="service-scope-grid">
+              <div className="scope-group">
+                <h4>{serviceScope.discussTitle}</h4>
+                <ul>
+                  {serviceScope.discuss.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+              <div className="scope-group">
+                <h4>{serviceScope.confirmTitle}</h4>
+                <ul>
+                  {serviceScope.confirm.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+            <p className="scope-preparation">{serviceScope.preparation}</p>
+            <p className="scope-note">{serviceScope.note}</p>
           </div>
         </section>
         <section

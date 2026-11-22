@@ -1,10 +1,12 @@
+> 維護日期：2026-11-23（Asia/Taipei）。此範本依參考專案目前的 Actions 發布流程更新；新 repo 仍須實際核對自己的 Pages 設定與網址。
+
 請建立／維護一個與 XK 既有一頁式專案一致的獨立網站。
 
 目標 repo：xk2022/<新專案名稱>
 GitHub 可見性：<public 或 private>
-預定網址：https://xk2022.github.io/<新專案名稱>/
+預定網址：<已核定自訂網域，或 https://xk2022.github.io/新專案名稱/>
 網站階段：<預覽版或正式版>
-發布方式：GitHub Pages，Deploy from a branch，gh-pages，/ (root)
+發布方式：GitHub Pages，GitHub Actions（build_type: workflow）
 本次授權：實作、推送、建立 PR、檢查通過後合併、發布及驗證公開網站。
 
 工程參考：
@@ -45,8 +47,10 @@ Pages URL、Open Graph 圖片 URL 及 README 網址。
 保留一般 Next.js build，另外提供 build:pages、preview:pages。
 Pages build 使用 static export、正確 basePath、trailing slash
 及不依賴伺服器圖片最佳化的資產。
-確認 Logo、圖片、字型、favicon、分享圖與頁內錨點在子路徑正常。
-out/ 必須包含 index.html、.nojekyll、_next/ 與必要靜態資產。
+自訂網域根站使用空 basePath；未設自訂網域的專案站使用 /<repo>。
+確認 Logo、圖片、字型、favicon、分享圖與頁內錨點在實際掛載路徑正常。
+out/ 必須包含 index.html、.nojekyll、_next/ 與必要靜態資產；
+保留不含訪客資料的 version.json，供來源 SHA、建置時間及路徑核對。
 
 5. Git 與 CI
 從最新 main 建立 codex/<任務名稱> 分支，以 PR 合併。
@@ -60,7 +64,10 @@ npm test
 npm run build
 npm run build:pages
 npm run test:e2e
-CI 必須測試真正匯出的 Pages 子路徑，不能只測開發伺服器。
+CI 必須測試真正匯出的 Pages 掛載路徑，不能只測開發伺服器。
+PR 只驗證；main 通過後才保存並部署同一份靜態產物。
+驗證 job 使用 contents:read；部署 job 使用 pages:write、id-token:write，
+並明確指定與上傳步驟相同的 artifact 名稱。
 
 6. 驗收
 使用 Chromium 驗證 375、390、768、1024、1280、1440px。
@@ -71,11 +78,13 @@ CI 必須測試真正匯出的 Pages 子路徑，不能只測開發伺服器。
 
 7. 發布
 確認 PR 的最新 head CI 通過後，依本次授權合併。
-將同一來源版本、已驗證的靜態產物同步至 gh-pages，
-gh-pages 只保存發布成品，不放原始碼、README 或 node_modules。
-使用可觸發分支發布的授權身分推送；不要假設內建
-GITHUB_TOKEN 推送一定會觸發 Pages 建置。
-確認 Pages 發布工作成功，再實際開啟公開網址及操作主要流程。
+由 main 的 Actions 將已通過驗收的同份 artifact 部署至已啟用的 Pages；
+目前流程不以 gh-pages 分支作日常發布來源。
+若本次另明確指定分支發布，才同步調整 Pages 的 build_type、來源、
+workflow 與 README；不得只推 gh-pages 便宣稱已上線，亦不能假設內建
+GITHUB_TOKEN 推送會觸發分支發布。
+確認 Pages deploy job 成功，再實際開啟公開網址及操作主要流程；
+公開 version.json 的 sourceSha 必須與此次 main 部署來源一致。
 遇到管理 API 403，完成其他可做的工作並列出必要設定，
 不可宣稱已部署成功，也不可自行改變 repo 可見性來排除問題。
 
@@ -84,4 +93,4 @@ GITHUB_TOKEN 推送一定會觸發 Pages 建置。
 將可重用工程規範寫入 AGENTS.md，保留 Next.js 自動產生的區塊；
 本次業務規格另外保存，避免混入永久規範。
 交付 PR、來源 commit、CI／發布紀錄、本機指令及公開網址，
-分別說明「CI 通過」「產物保存」「gh-pages 更新」「發布成功」。
+分別說明「CI 通過」「產物保存」「部署成功」「公開站 SHA 驗證」。
