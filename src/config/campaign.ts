@@ -22,6 +22,7 @@ export const campaign = {
   title: "一頁式網站建置｜Xplore Kaleidoscope（XK）",
   description:
     "從看菜單、找門市，到詢價、報名，XK 協助你把服務整理成手機上就能用的一頁。先用需求整理工具，產生並複製可直接討論的建站需求。",
+  pagesPreviewUrl: "https://xk2022.github.io/xk-campaign-website-design/",
   links: {
     home: "https://xk2022.github.io/xk-website/",
     services: "https://xk2022.github.io/xk-website/services/",

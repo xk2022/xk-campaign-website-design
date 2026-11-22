@@ -13,8 +13,16 @@ export const metadata: Metadata = {
     locale: "zh_TW",
     type: "website",
     siteName: campaign.brand.name,
+    images: [
+      {
+        url: new URL("brand/xk-logo-primary.png", campaign.pagesPreviewUrl),
+        width: 1240,
+        height: 820,
+        type: "image/png",
+        alt: "Xplore Kaleidoscope 正式標誌",
+      },
+    ],
   },
-  // 展示版尚無核定公開網址，不設定 canonical 或冒用官網 URL。
 };
 
 export default function RootLayout({

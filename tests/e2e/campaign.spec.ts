@@ -1,5 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
-import { mkdir } from "node:fs/promises";
+
+const shareImage = "brand/xk-logo-primary.png";
+const pagesUrl = "https://xk2022.github.io/xk-campaign-website-design/";
 
 const brand = (page: Page) => page.getByLabel(/品牌或專案名稱/);
 const audience = (page: Page) => page.getByLabel(/想給誰看/);
@@ -30,17 +32,16 @@ async function captureFullPage(page: Page, path: string) {
   await page.screenshot({ path, fullPage: true });
 }
 
-for (const width of [375, 768, 1024, 1440]) {
-  test(`${width}px：首頁、表單、長品牌與多行摘要不水平溢位`, async ({ page }) => {
+for (const width of [375, 390, 768, 1024, 1280, 1440]) {
+  test(`${width}px：首頁、表單、長品牌與多行摘要不水平溢位`, async ({ page }, testInfo) => {
     await page.setViewportSize({ width, height: 900 });
     await load(page);
     await assertNoOverflow(page);
-    await mkdir("artifacts/screenshots", { recursive: true });
     // Trigger the footer's lazy brand image before a full-page capture.
     await page.locator(".closing img").scrollIntoViewIfNeeded();
     await expect(page.locator(".closing img")).toHaveJSProperty("complete", true);
     expect(await page.locator(".closing img").evaluate((image: HTMLImageElement) => image.naturalWidth)).toBeGreaterThan(0);
-    await captureFullPage(page, `artifacts/screenshots/home-${width}.png`);
+    await captureFullPage(page, testInfo.outputPath(`home-${width}.png`));
     await brand(page).fill("山角工作室".repeat(18) + "LongBrandNameWithoutSpaces".repeat(5));
     await audience(page).fill("正在找客製木作且想了解尺寸與用途的店主");
     await action(page).selectOption("詢價");
@@ -53,7 +54,7 @@ for (const width of [375, 768, 1024, 1440]) {
     expect(textarea.scrollHeight).toBeGreaterThan(100);
     expect(textarea.value).toContain("LongBrandNameWithoutSpaces");
     await assertNoOverflow(page);
-    await captureFullPage(page, `artifacts/screenshots/summary-${width}.png`);
+    await captureFullPage(page, testInfo.outputPath(`summary-${width}.png`));
   });
 }
 
@@ -165,17 +166,27 @@ test("剪貼簿拒絕時保留全文且提供手動全文選取", async ({ page 
   expect(await summary(page).evaluate((element: HTMLTextAreaElement) => element.value.slice(element.selectionStart, element.selectionEnd))).toBe(text);
 });
 
-test("重新整理清空草稿，網址與瀏覽器儲存空間不含草稿", async ({ page }) => {
+test("草稿留在頁面記憶體，重新整理後清空", async ({ page }) => {
   await load(page);
-  const secret = "此草稿不寫入網址與儲存空間";
-  await brand(page).fill(secret);
+  const draftMarker = "campaign-test-draft";
+  const siteOrigin = new URL(page.url()).origin;
+  const draftRequests: string[] = [];
+  page.on("request", (request) => {
+    const url = new URL(request.url());
+    if (!["GET", "HEAD"].includes(request.method()) || url.origin !== siteOrigin || url.href.includes(draftMarker)) {
+      draftRequests.push(`${request.method()} ${url.href}`);
+    }
+  });
+  await brand(page).fill(draftMarker);
   await audience(page).fill("本地訪客");
   await action(page).selectOption("導航");
   await generate(page).click();
-  expect(page.url()).not.toContain(encodeURIComponent(secret));
+  await expect(summary(page)).toHaveValue(/campaign-test-draft/);
+  expect(draftRequests).toEqual([]);
+  expect(page.url()).not.toContain(draftMarker);
   const storage = await page.evaluate(() => ({ local: JSON.stringify(localStorage), session: JSON.stringify(sessionStorage) }));
-  expect(storage.local).not.toContain(secret);
-  expect(storage.session).not.toContain(secret);
+  expect(storage.local).not.toContain(draftMarker);
+  expect(storage.session).not.toContain(draftMarker);
   await page.reload();
   await expect(brand(page)).toHaveValue("");
   await expect(audience(page)).toHaveValue("");
@@ -183,14 +194,26 @@ test("重新整理清空草稿，網址與瀏覽器儲存空間不含草稿", as
   await expect(scenario(page)).toHaveValue("");
 });
 
-test("語系、metadata、展示版索引及外部連結皆正確", async ({ page }) => {
+test("語系、metadata、展示版索引及外部連結皆正確", async ({ page, request }) => {
   await load(page);
   await expect(page.locator("html")).toHaveAttribute("lang", "zh-Hant");
   await expect(page).toHaveTitle("一頁式網站建置｜Xplore Kaleidoscope（XK）");
   await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", /XK/);
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", "noindex, nofollow");
   await expect(page.locator('meta[property="og:title"]')).toHaveAttribute("content", "一頁式網站建置｜Xplore Kaleidoscope（XK）");
+  await expect(page.locator('meta[property="og:image"]')).toHaveAttribute("content", new URL(shareImage, pagesUrl).href);
   await expect(page.locator('link[rel="canonical"]')).toHaveCount(0);
+  await expect(page.locator('meta[property="og:url"]')).toHaveCount(0);
+  const robots = await request.get(new URL("robots.txt", page.url()).href);
+  expect(robots.status()).toBe(200);
+  expect(robots.headers()["content-type"]).toContain("text/plain");
+  const crawlRules = await robots.text();
+  expect(crawlRules).toMatch(/^User-agent:\s*\*$/im);
+  const allow = crawlRules.match(/^Allow:[ \t]*(\S+)[ \t]*$/im)?.[1];
+  expect(["/", new URL(page.url()).pathname]).toContain(allow);
+  expect(crawlRules).not.toMatch(/^(Disallow|Sitemap):/im);
+  const sitemap = await request.get(new URL("sitemap.xml", page.url()).href);
+  expect(sitemap.status()).toBe(404);
   for (const [label, href] of [["XK 官網", "https://xk2022.github.io/xk-website/"], ["完整服務", "https://xk2022.github.io/xk-website/services/"], ["技術作品集", "https://xk2022.github.io/xk-website/portfolio/"]]) {
     await expect(page.getByRole("link", { name: label, exact: true })).toHaveAttribute("href", href);
   }
@@ -230,7 +253,7 @@ test("JavaScript 尚未啟用時停用送出，草稿不會被原生表單帶入
   await context.close();
 });
 
-test("子路徑上的正式 Logo 與所有圖片資產可載入，沒有資產 404", async ({ page, request, baseURL }) => {
+test("子路徑上的正式 Logo、圖示與分享圖可載入，沒有資產 404", async ({ page, request, baseURL }) => {
   const failedAssets: string[] = [];
   page.on("response", (response) => {
     if (response.status() >= 400 && ["image", "stylesheet", "script", "font"].includes(response.request().resourceType())) {
@@ -249,5 +272,17 @@ test("子路徑上的正式 Logo 與所有圖片資產可載入，沒有資產 4
     expect(response.status()).toBe(200);
     expect(response.headers()["content-type"]).toContain("image/svg+xml");
   }
+  const icon = page.locator('link[rel="icon"]');
+  await expect(icon).toHaveAttribute("type", "image/svg+xml");
+  const iconUrl = new URL((await icon.getAttribute("href")) ?? "", page.url());
+  expect(iconUrl.pathname).toBe(`${basePath}/icon.svg`);
+  const [favicon, image] = await Promise.all([
+    request.get(iconUrl.href),
+    request.get(new URL(shareImage, page.url()).href),
+  ]);
+  expect(favicon.status()).toBe(200);
+  expect(favicon.headers()["content-type"]).toContain("image/svg+xml");
+  expect(image.status()).toBe(200);
+  expect(image.headers()["content-type"]).toContain("image/png");
   expect(failedAssets).toEqual([]);
 });
