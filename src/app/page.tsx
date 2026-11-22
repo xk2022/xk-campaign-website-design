@@ -209,7 +209,7 @@ export default function Home() {
                 你的第一頁。
               </h2>
               <p>
-                填完就能複製需求摘要。內容只在這個頁面整理，不會自動寄給 XK。
+                填完就能複製需求摘要。草稿只留在此頁，重新整理即清空。
               </p>
               <ol className="brief-roadmap">
                 <li>
@@ -269,7 +269,7 @@ export default function Home() {
           </div>
           <div className="footer-bottom">
             <span>© 2026 {campaign.brand.name}</span>
-            <span>一頁式網站建置服務 · 展示版</span>
+            <span>R01 網站建置 · W01 一頁式服務推廣預覽</span>
           </div>
         </div>
       </footer>
