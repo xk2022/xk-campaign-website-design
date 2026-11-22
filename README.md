@@ -4,6 +4,8 @@
 
 獨立專案 `xk-campaign-website-design`。首頁 `/`，繁體中文、手機優先，主要完成動作為「產生並複製需求摘要」。使用 Next.js App Router、React、TypeScript、Tailwind CSS 4 與 Lucide。透過 GitHub Actions 驗證並發布靜態網站至 GitHub Pages，與 XK 官網及公司文件庫分開維護。
 
+本頁為 Xplore Kaleidoscope（XK）自主製作的服務推廣預覽，依 P01 Website Development、W01 一頁式網站規格開發，對應 R01 網站建置。公開部署待啟用 GitHub Pages。
+
 ## 安裝與本機啟動
 
 在本專案根目錄執行（Node.js 24.x、npm；`.nvmrc` 為 `24`）：
@@ -29,7 +31,7 @@ npm start -- --port 3000
 
 - 原始碼：[xk2022/xk-campaign-website-design](https://github.com/xk2022/xk-campaign-website-design)
 - 工作流程：[CI and deploy GitHub Pages](https://github.com/xk2022/xk-campaign-website-design/actions/workflows/pages.yml)
-- Pages 入口：`https://xk2022.github.io/xk-campaign-website-design/`（須啟用 Pages 並完成部署後才可用，以 Actions 結果為準）
+- 預定 Pages 入口為 `https://xk2022.github.io/xk-campaign-website-design/`，目前回傳 HTTP 404。現有 `main` 的建置與驗收已通過，部署工作在 `Configure GitHub Pages` 回報找不到 Pages 網站。 [部署紀錄](https://github.com/xk2022/xk-campaign-website-design/actions/runs/44969142446)
 
 `.github/workflows/pages.yml` 在 PR、推送 `main` 及手動執行時啟動。PR 只驗證；`main` 通過全部檢查後才發布同一份靜態產物：
 
@@ -60,7 +62,8 @@ npm run preview:pages -- --port 3002
 - 若自行設定 `NEXT_PUBLIC_BASE_PATH`，建置與預覽時必須使用相同值；預設不需額外設定環境變數。
 - Pages build 使用 `output: export`、trailing slash 及靜態圖片；Logo／符號路徑與 Next.js 資產都包含同一個 basePath。
 - 官網導流使用原本的完整絕對網址，不受廣告頁 basePath 影響。
-- 更換 repo 名稱或自訂網域時，需一併核對 build 的 basePath、workflow 測試 URL 與 README 網址；正式廣告網址核定前仍保留 `noindex, nofollow`，不自動加 canonical。
+- 更換 repo 名稱或自訂網域時，一併核對 build 的 basePath、workflow 測試 URL、`campaign.pagesPreviewUrl` 與 README 網址。
+- 預覽頁保留 `noindex, nofollow`。官方 favicon 和 Open Graph 分享圖隨靜態輸出，分享圖使用預定 Pages 子路徑。待正式廣告網址核定後再設定 canonical、`og:url` 與 sitemap。`robots.txt` 讓爬蟲可讀取頁面的 `noindex` 標籤，專案子路徑下的檔案不取代網域根目錄的爬取規則。
 
 靜態產物完整驗收（POSIX shell；Windows 可在 shell 中設定相同環境變數）：
 
@@ -77,7 +80,7 @@ npm run test:e2e
 | `.github/workflows/pages.yml` | PR 檢查與 main 的 Pages artifact 部署 |
 | `scripts/build-pages.mjs`、`scripts/serve-pages.mjs` | 跨平台靜態建置與子路徑預覽 |
 | `src/app/page.tsx` | Server Component：首屏、三種情境、合作方式、工具區與頁尾 |
-| `src/app/layout.tsx` | `zh-Hant`、title／description／Open Graph／noindex，從品牌設定注入 CSS 變數 |
+| `src/app/layout.tsx`、`src/app/icon.svg`、`src/app/robots.txt` | `zh-Hant`、title、description、Open Graph 分享圖、favicon 及預覽索引設定 |
 | `src/app/globals.css` | 手機優先版面、品牌視覺、表單、換行與可見焦點、減少動態偏好 |
 | `src/config/campaign.ts` | **品牌名稱／正式 Logo 路徑／色票／字型、情境、動作、素材、外部網址與案例公開策略** |
 | `src/components/phone-preview.tsx` | Server Component：自行設計的手機頁面與店面向量插畫，明示「介面示意」及虛構品牌 |
@@ -85,8 +88,8 @@ npm run test:e2e
 | `src/components/brief-tool.tsx` | Client Component：記憶體草稿、驗證、摘要、複製／拒絕複製與返回修改 |
 | `src/lib/brief.ts` | 表單型別、虛構示範資料、素材互斥、欄位驗證與自然中文摘要 |
 | `src/components/brief-tool.test.tsx` | 7 項 Vitest／Testing Library 回歸測試 |
-| `tests/e2e/campaign.spec.ts` | Playwright 瀏覽器驗收、四寬度與首頁／摘要截圖 |
-| `public/brand/` | 公司庫正式 Logo 03 的原始 SVG，未重繪、換色或改變比例 |
+| `tests/e2e/campaign.spec.ts` | Playwright 驗收六種視窗寬度、首頁、摘要及 Pages 子路徑資源 |
+| `public/brand/` | 公司庫正式 Logo 03 的原始 SVG 與 PNG 分享圖 |
 | `.nvmrc`、`package-lock.json`、`package.json` | Node 24 與可獨立安裝、啟動、檢查及建置的工程基準 |
 
 靜態內容使用 Server Components；只有情境入口、表單及剪貼簿使用 Client Components。字型經 `@fontsource/inter` 與 `@fontsource/noto-sans-tc` 本地打包，不在瀏覽時呼叫 Google Fonts。使用原生語意表單控制項與 Lucide，沒有為簡單欄位另加 UI 元件依賴。`AGENTS.md` 是首次 `next dev` 自動產生的 Next.js 版本指引，後續已依其查閱此版內建文件。
@@ -101,7 +104,6 @@ npm run test:e2e
 - `navigator.clipboard.writeText` 成功後才顯示「已複製，可自行貼給 XK」。被拒或 API 不可用時保留唯讀全文，並提供「選取摘要全文」以手動複製。
 - 草稿僅使用 React 記憶體狀態。重新整理即清空，沒有 API、寄信、後台、追蹤像素、分析事件或瀏覽器儲存；網址只有頁內錨點，外連不附加草稿。
 - JavaScript 尚未完成載入或停用時，表單停用並顯示 noscript 說明。草稿控制項不帶 `name`，避免原生表單回退把內容寫入查詢字串。
-- 展示版維持 `noindex, nofollow`。尚無核定正式廣告頁網址，故不設定 canonical 或 `og:url`，不冒用官網網址。
 
 ## 品牌與參考來源（唯讀）
 
@@ -111,6 +113,7 @@ npm run test:e2e
 - 官網 snapshot：`95d8153192ac69b10821baa2a2f4b115a5693c03`
 - [Week 03 前端架構](https://github.com/xk2022/xplore-kaleidoscope/blob/main/doc/01_business-plan/week-03/01_nextjs-architecture_前端技術架構.md)
 - [Week 03 GitHub 開發流程](https://github.com/xk2022/xplore-kaleidoscope/blob/main/doc/01_business-plan/week-03/05_github-workflow_開發與版本管理規範.md)
+- [Week 04 作品集策略](https://github.com/xk2022/xplore-kaleidoscope/blob/main/doc/01_business-plan/week-04/01_portfolio-strategy_XK%20%E6%8A%80%E8%A1%93%E4%BD%9C%E5%93%81%E5%B1%95%E7%A4%BA%E7%AD%96%E7%95%A5.md)
 - [官網品牌 tokens 與焦點樣式](https://github.com/xk2022/xk-website/blob/main/src/app/globals.css)
 - [官網字型設定](https://github.com/xk2022/xk-website/blob/main/src/app/layout.tsx)
 - [公司庫正式 Logo 03 master](https://github.com/xk2022/xplore-kaleidoscope/blob/main/assets/brand/logo/source/original-design-files/xk-logo-03-master.svg)
@@ -146,17 +149,17 @@ UI 使用深藍 `#101A33`、亮藍 `#3157D5`、青色 `#19B8D5`；正式 Logo �
 | `npm test` | 7／7 通過 |
 | `npm run build` | 通過，`/` 預先產生為靜態頁面 |
 | `npm run build:pages` | 通過，產生含子路徑與 `.nojekyll` 的 `out/` |
-| `npm run test:e2e`（Pages 靜態預覽） | **16／16 通過**，Chromium 驗收共 41.0 秒 |
+| `npm run test:e2e`（Pages 靜態預覽） | **18／18 通過**，包含 favicon、分享圖、索引設定及需求摘要流程 |
 
 在此受管環境中，安裝、啟動與 Turbopack 的 PostCSS 內部程序需要允許網路／本機綁定連接埠。第一次在受限 shell 執行 build 時曾被 `bind port: Operation not permitted` 阻擋；允許本機網路後，同一 `npm run build` 已成功，沒有以略過編譯或關閉檢查處理。一般本機執行不需要此環境的工具權限參數。
 
 ### 瀏覽器範圍
 
-Pages 靜態產物結果：16／16 通過，包含 Logo 回應 MIME 與資產零 404。原一般 production 預覽 15 項測試亦已於 2026-11-21 通過。另已在可見的 Cloud Chrome 親自操作「帶入示範 → 產生需求摘要」，確認全文與聯絡入口正常，再清空草稿並保留首頁預覽。早期測試發現的開發伺服器互動初始化與情境錨點焦點問題，均已修正並經最終完整重跑。
+初版的一般 production 預覽於 2026-11-21 通過 15 項測試，Pages 靜態預覽於 2026-11-22 通過 16 項。初版也在 Cloud Chrome 操作「帶入示範 → 產生需求摘要」，確認全文、聯絡入口及草稿清除。
 
-- 2026-11-22 以純靜態預覽 `/xk-campaign-website-design/` 重跑完整 16 項流程；以下原功能全部包含在該次驗收。
+- 本次以純靜態預覽 `/xk-campaign-website-design/` 驗證 Logo、favicon 與分享圖的路徑及內容類型，並檢查首頁資產載入。
 - 2026-11-21 Chromium 實際瀏覽器，以 production `npm start` 的 3000 連接埠驗收；另以開發模式 3001 驗證示範 → 摘要、網址無草稿及無頁面程式錯誤。
-- 375、768、1024、1440px：首頁、表單、長品牌及多行摘要均檢查水平溢位；摘要文字以換行呈現。首頁／摘要各四張截圖在 `artifacts/screenshots/`。
+- 375、390、768、1024、1280、1440 px：首頁、表單、長品牌及多行摘要均檢查水平溢位。新一輪的首頁與摘要截圖會寫入 `test-results/`，初版四種寬度的參考截圖保存在 `artifacts/screenshots/`。
 - 375×667 及 375×812：兩個首屏入口皆位於可視範圍，按鈕高度至少 44px。
 - 三情境入口保留手填資料；直接填表、其他動作、素材雙向互斥、空白必填與第一錯誤焦點。
 - 示範 → 摘要 → 返回修改為報名 → 再產生 → 真實剪貼簿寫入與讀回全文比對；另模擬 `NotAllowedError` 驗證手動選取全文與沒有誤報成功。
@@ -172,4 +175,4 @@ npm run test:e2e
 
 預設測試會重用 3000 的既有 server，無 server 時自動啟動 `npm run dev`；可用 `PLAYWRIGHT_BASE_URL` 與 `PLAYWRIGHT_SERVER_COMMAND` 指向靜態 Pages 預覽。CI 會自行啟動測試伺服器。HTML 報告輸出至 `playwright-report/`，失敗追蹤輸出至 `test-results/`，兩者不納入原始碼版本。
 
-未驗證：實體手機、Safari／Firefox、真實廣告投放。此次本機驗收為 Chromium 的指定 viewport，不宣稱已做實機或所有瀏覽器相容性驗證。遠端發布是否成功以本頁頂端 Actions 狀態與部署 job 為準；若 Pages 尚未啟用，部署會失敗並需先完成設定。展示站不代表已核定正式廣告 URL，故仍不設定 canonical。
+此次本機驗收使用指定 viewport 的 Chromium。遠端發布以部署工作的結果為準。
