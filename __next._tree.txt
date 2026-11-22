@@ -1,4 +1,4 @@
 :HL["/xk-campaign-website-design/_next/static/chunks/1lpd7o_xlzuql.css","style"]
 :HC["/",""]
 1:[["children",{"s":"__PAGE__","h":160}]]
-0:{"b":"2VtP2DL2q6y8tFrzPYoQG","t":{"t":{"s":"","h":80,"c":"$Q1"}}}
+0:{"b":"rduJg1Rq0_sbVKeq2U6ZL","t":{"t":{"s":"","h":80,"c":"$Q1"}}}
