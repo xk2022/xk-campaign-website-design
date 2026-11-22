@@ -1,10 +1,10 @@
 # XK 一頁式網站建置服務廣告頁
 
-[![CI and deploy GitHub Pages](https://github.com/xk2022/xk-campaign-website-design/actions/workflows/pages.yml/badge.svg)](https://github.com/xk2022/xk-campaign-website-design/actions/workflows/pages.yml)
+[![Verify GitHub Pages export](https://github.com/xk2022/xk-campaign-website-design/actions/workflows/pages.yml/badge.svg)](https://github.com/xk2022/xk-campaign-website-design/actions/workflows/pages.yml)
 
-獨立專案 `xk-campaign-website-design`。首頁 `/`，繁體中文、手機優先，主要完成動作為「產生並複製需求摘要」。使用 Next.js App Router、React、TypeScript、Tailwind CSS 4 與 Lucide。透過 GitHub Actions 驗證並發布靜態網站至 GitHub Pages，與 XK 官網及公司文件庫分開維護。
+獨立專案 `xk-campaign-website-design`。首頁 `/`，繁體中文、手機優先，主要完成動作為「產生並複製需求摘要」。使用 Next.js App Router、React、TypeScript、Tailwind CSS 4 與 Lucide。GitHub Actions 驗證靜態輸出，GitHub Pages 從 `gh-pages` 分支發布。專案與 XK 官網及公司文件庫分開維護。
 
-本頁為 Xplore Kaleidoscope（XK）自主製作的服務推廣預覽，依 P01 Website Development、W01 一頁式網站規格開發，對應 R01 網站建置。公開部署待啟用 GitHub Pages。
+本頁為 Xplore Kaleidoscope（XK）自主製作的服務推廣預覽，依 P01 Website Development、W01 一頁式網站規格開發，對應 R01 網站建置。公開展示使用 GitHub Pages。
 
 ## 安裝與本機啟動
 
@@ -30,24 +30,27 @@ npm start -- --port 3000
 ## GitHub Actions 與 GitHub Pages
 
 - 原始碼：[xk2022/xk-campaign-website-design](https://github.com/xk2022/xk-campaign-website-design)
-- 工作流程：[CI and deploy GitHub Pages](https://github.com/xk2022/xk-campaign-website-design/actions/workflows/pages.yml)
-- 預定 Pages 入口為 `https://xk2022.github.io/xk-campaign-website-design/`，目前回傳 HTTP 404。現有 `main` 的建置與驗收已通過，部署工作在 `Configure GitHub Pages` 回報找不到 Pages 網站。 [部署紀錄](https://github.com/xk2022/xk-campaign-website-design/actions/runs/44969142446)
+- 驗證工作流程 [Verify GitHub Pages export](https://github.com/xk2022/xk-campaign-website-design/actions/workflows/pages.yml)
+- 公開展示 [GitHub Pages](https://xk2022.github.io/xk-campaign-website-design/)
 
-`.github/workflows/pages.yml` 在 PR、推送 `main` 及手動執行時啟動。PR 只驗證；`main` 通過全部檢查後才發布同一份靜態產物：
+`.github/workflows/pages.yml` 在 PR、推送 `main` 及手動執行時啟動，`main` 通過驗證後會保存靜態輸出。
 
 1. 依 `.nvmrc` 使用 Node.js 24，執行 `npm ci`。
 2. 執行 lint、typecheck、單元測試及一般 Next.js build。
-3. 執行 `npm run build:pages` 產生 `out/`。
+3. 執行 `npm run build:pages`，確認 `out/` 包含 Next.js 首頁、資產與 `.nojekyll`。
 4. 安裝 Chromium，對實際靜態產物執行 Playwright，包含 `/xk-campaign-website-design/` 子路徑、Logo 與需求工具。
-5. 上傳驗證通過的 Pages artifact，透過 `github-pages` environment 部署。
+5. 在 `main` 的執行紀錄保存 `pages-static-export` artifact，供維護者發布。
 
-官方 Actions 固定於完整 commit SHA，並在 YAML 註明版本。驗證 job 只有 `contents: read`；部署 job 才授予 `pages: write` 與 `id-token: write`。未使用 PAT、部署私鑰或自訂秘密。相同分支依序執行，避免部署互相中斷。
+官方 Actions 固定於完整 commit SHA，驗證 job 只需 `contents: read`。
 
-### 首次啟用 Pages
+### 從分支發布
 
-具 repo 管理權限的維護者到 **Settings → Pages → Build and deployment → Source → GitHub Actions**。本專案已包含 workflow，無需套用 GitHub 建議模板。啟用後，在 Actions 選擇本工作流程，按 **Run workflow**，分支選 `main`；失敗時先看 `Validate and build` 或 `Deploy to GitHub Pages` 的日誌。
+1. 從 `main` 成功的驗證紀錄下載 `pages-static-export` 並解開其中的 `artifact.tar`，或依下節驗證本機同版本的 `out/`。
+2. 維護者在獨立工作目錄取出 `gh-pages` 分支，更新分支根目錄為驗證過的靜態輸出內容。提交前確認根目錄有 `index.html`、`.nojekyll`、`_next/` 和 `brand/`，並檢查提交內容只包含此次輸出。首次發布時可建立專用的 `gh-pages` 分支。
+3. 維護者提交並推送 `gh-pages`。Pages 來源必須設定為分支發布；若仍選 GitHub Actions，此驗證流程只保存產物，不會更新公開網站。首次設定時，具管理權限的維護者在 **Settings → Pages → Build and deployment** 選 **Deploy from a branch**，指定 **gh-pages** 與 **/ (root)**，再儲存。 [GitHub Pages 分支發布](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site#publishing-from-a-branch)
+4. 確認 `pages-build-deployment` 成功，開啟公開展示並確認首頁、品牌素材與需求摘要工具正常。
 
-此設定需 GitHub Pages 管理權限；一般程式碼推送權限不足以代替。Private repo 能否使用 Pages 取決 GitHub 帳戶方案。若 GitHub 顯示方案限制，先確認託管方式，不應為了排除錯誤直接更改 repo 可見性。發布頁面後，原始碼仍維持 repo 原有可見性。
+首次設定完成後，每次更新由維護者推送已驗證的 `gh-pages` 成品，再核對發布結果。GitHub 內建的 `GITHUB_TOKEN` 推送無法觸發這項建置。 [GitHub Pages 分支發布疑難排解](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site#troubleshooting-publishing-from-a-branch)
 
 ### 本機驗證 Pages 產物
 
@@ -77,7 +80,7 @@ npm run test:e2e
 
 | 檔案 | 用途 |
 | --- | --- |
-| `.github/workflows/pages.yml` | PR 檢查與 main 的 Pages artifact 部署 |
+| `.github/workflows/pages.yml` | PR 檢查與 main 的靜態輸出驗證及保存 |
 | `scripts/build-pages.mjs`、`scripts/serve-pages.mjs` | 跨平台靜態建置與子路徑預覽 |
 | `src/app/page.tsx` | Server Component：首屏、三種情境、合作方式、工具區與頁尾 |
 | `src/app/layout.tsx`、`src/app/icon.svg`、`src/app/robots.txt` | `zh-Hant`、title、description、Open Graph 分享圖、favicon 及預覽索引設定 |
@@ -175,4 +178,4 @@ npm run test:e2e
 
 預設測試會重用 3000 的既有 server，無 server 時自動啟動 `npm run dev`；可用 `PLAYWRIGHT_BASE_URL` 與 `PLAYWRIGHT_SERVER_COMMAND` 指向靜態 Pages 預覽。CI 會自行啟動測試伺服器。HTML 報告輸出至 `playwright-report/`，失敗追蹤輸出至 `test-results/`，兩者不納入原始碼版本。
 
-此次本機驗收使用指定 viewport 的 Chromium。遠端發布以部署工作的結果為準。
+此次本機驗收為 Chromium 的指定 viewport。實體手機、Safari／Firefox 與真實廣告投放待驗證。遠端發布狀態以 `pages-build-deployment` 執行紀錄及公開頁面為準。正式廣告網址核定前，展示站維持 `noindex, nofollow`。

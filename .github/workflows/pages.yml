@@ -1,4 +1,4 @@
-name: CI and deploy GitHub Pages
+name: Verify GitHub Pages export
 
 on:
   pull_request:
@@ -22,6 +22,8 @@ jobs:
     steps:
       - name: Check out source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - name: Set up Node.js 24
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
@@ -39,6 +41,13 @@ jobs:
         run: npm run build
       - name: Build GitHub Pages static export
         run: npm run build:pages
+      - name: Check the branch publication files
+        run: |
+          test -s out/index.html
+          test -f out/.nojekyll
+          test -d out/_next/static
+          grep -Fq '/xk-campaign-website-design/_next/static/' out/index.html
+          test ! -e out/README.md
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
       - name: Test the exported site under its Pages path
@@ -46,27 +55,10 @@ jobs:
         env:
           PLAYWRIGHT_BASE_URL: http://127.0.0.1:3000/xk-campaign-website-design/
           PLAYWRIGHT_SERVER_COMMAND: npm run preview:pages -- --port 3000
-      - name: Upload Pages artifact
+      - name: Save the verified static export
         if: github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
+          name: pages-static-export
           path: out
-
-  deploy:
-    name: Deploy to GitHub Pages
-    if: github.ref == 'refs/heads/main'
-    needs: verify
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Configure GitHub Pages
-        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
-      - name: Deploy the verified artifact
-        id: deployment
-        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+          include-hidden-files: true
