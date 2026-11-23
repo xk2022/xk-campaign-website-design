@@ -1,3 +1,5 @@
+**公開網站：[https://web.xplorekaleidoscope.com/](https://web.xplorekaleidoscope.com/)**
+
 # XK 一頁式網站建置服務廣告頁
 
 [![Verify and deploy GitHub Pages](https://github.com/xk2022/xk-campaign-website-design/actions/workflows/pages.yml/badge.svg)](https://github.com/xk2022/xk-campaign-website-design/actions/workflows/pages.yml)
