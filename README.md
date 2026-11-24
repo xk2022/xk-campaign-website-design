@@ -8,6 +8,10 @@
 
 本頁為 Xplore Kaleidoscope（XK）自主製作的服務推廣預覽，依 P01 Website Development、W01 一頁式網站規格開發，對應 R01 網站建置。公開展示使用 GitHub Pages。
 
+## 方案費用
+
+三種價位方案已於 2026-11-24 授權刊登：形象起步 **NT$15,000 起**、服務推廣 **NT$22,000 起**、互動客製 **NT$30,000 起**，均為一次性建置的預估起價。方案集中於 `src/config/campaign.ts` 的 `pricing`，正式建置預設顯示；稅別、付款、網域／主機與維護等費用仍逐案列入報價單確認。[方案來源、條件與驗證紀錄](doc/03_pricing_proposal_2026-11-24.md) 保留原提案與採用經過。
+
 ## 品質待辦與後續修復
 
 [2026-11-23 品質待辦與修復紀錄](doc/02_quality_backlog_2026-11-23.md) 整理 2026-11-22 檢查發現，包含項目編號、優先度、證據、驗收條件與建議分支。可重用的開工命令見 [一頁式專案命令範本](doc/01_one_page_solution.md)。後續修復請指定項目編號，從最新 `main` 建立對應分支，並更新該檔的日期與狀態。已確認缺陷、產品改善、業務待確認及待驗證項目分開追蹤。
@@ -96,7 +100,8 @@ NEXT_PUBLIC_BASE_PATH="" npm run preview:pages -- --port 3007
 | `src/app/page.tsx` | Server Component：首屏、三種情境、合作方式、工具區與頁尾 |
 | `src/app/layout.tsx`、`src/app/icon.svg`、`src/app/robots.txt` | `zh-Hant`、title、description、Open Graph 分享圖、favicon 及預覽索引設定 |
 | `src/app/globals.css`、`src/app/fonts.css` | 手機優先版面、品牌視覺、表單、換行與可見焦點、減少動態偏好 |
-| `src/config/campaign.ts` | **品牌名稱／正式 Logo 路徑／色票／字型、情境、動作、素材、外部網址與案例公開策略** |
+| `src/config/campaign.ts` | **品牌名稱／正式 Logo 路徑／色票／字型、情境、動作、素材、外部網址、價位方案／刊登狀態與案例公開策略** |
+| `src/components/pricing-section.tsx`、`pricing-section.module.css` | Server Component：三檔預估起價、費用條件與前往需求工具的入口 |
 | `src/components/scenario-examples.tsx` | Server Component：製造／活動的靜態虛構介面示意 |
 | `scripts/measure-fonts.mjs` | 可重現的冷 Chromium 字型／CSS 載入量測 |
 | `src/components/phone-preview.tsx` | Server Component：自行設計的手機頁面與店面向量插畫，明示「介面示意」及虛構品牌 |
@@ -105,6 +110,7 @@ NEXT_PUBLIC_BASE_PATH="" npm run preview:pages -- --port 3007
 | `src/lib/brief.ts` | 表單型別、虛構示範資料、素材互斥、欄位驗證與自然中文摘要 |
 | `src/components/brief-tool.test.tsx` | 表單互動回歸測試；另有 `src/lib/brief.test.ts` 覆蓋 Unicode 與摘要文案，共 31 項 |
 | `tests/e2e/campaign.spec.ts` | Playwright 驗收六種視窗寬度、首頁、摘要及 Pages 子路徑資源 |
+| `tests/e2e/pricing.spec.ts` | 刊登狀態、手機首屏費用入口、三方案與草稿保留驗收 |
 | `public/brand/` | 公司庫正式 Logo 03 的原始 SVG 與 PNG 分享圖 |
 | `.nvmrc`、`package-lock.json`、`package.json` | Node 24 與可獨立安裝、啟動、檢查及建置的工程基準 |
 

@@ -16,15 +16,21 @@ import {
   scenarios,
   cooperationSteps,
   serviceScope,
+  pricing,
 } from "@/config/campaign";
 import { PhonePreview } from "@/components/phone-preview";
 import { ScenarioStart } from "@/components/scenario-start";
 import { BriefTool } from "@/components/brief-tool";
 import { ScenarioExamples } from "@/components/scenario-examples";
+import { PricingSection } from "@/components/pricing-section";
 
 const scenarioIcons = [Store, Shapes, Ticket];
 
 export default function Home() {
+  const draftPricingPreview = pricing.status !== "published" && process.env.XK_PRICING_PREVIEW === "true";
+  const showPricing = pricing.status === "published" || draftPricingPreview;
+  const startingPrice = new Intl.NumberFormat("zh-TW").format(Math.min(...pricing.plans.map((plan) => plan.amount)));
+
   return (
     <>
       <a className="skip-link" href="#main">
@@ -46,6 +52,11 @@ export default function Home() {
             />
           </a>
           <nav aria-label="主要導覽">
+            {showPricing && (
+              <a className="nav-link" href="#pricing">
+                方案費用
+              </a>
+            )}
             <a className="nav-link" href="#scenarios">
               適用情境
             </a>
@@ -80,6 +91,12 @@ export default function Home() {
               <br className="desktop-break" />
               把客人最常問的事，整理成手機上就能用的一頁。
             </p>
+            {showPricing && (
+              <a href="#pricing" className="hero-price-link">
+                <span>{draftPricingPreview ? "價位提案" : "建置費用"} <strong>{pricing.currencyLabel} {startingPrice} 起</strong></span>
+                <span>比較三種方案 <ArrowDown size={15} aria-hidden="true" /></span>
+              </a>
+            )}
             <div className="hero-actions">
               <a href="#brief" className="button button-primary">
                 整理我的建站需求
@@ -115,6 +132,7 @@ export default function Home() {
             </div>
           </div>
         </div>
+        {showPricing && <PricingSection draftPreview={draftPricingPreview} />}
         <section
           id="scenarios"
           className="section container"
