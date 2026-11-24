@@ -176,3 +176,56 @@ export const scenarioExamples = [
     action: "確認入口後前往報名",
   },
 ] as const;
+
+/**
+ * 本輪價位提案，尚未核定；預設不在公開建置中顯示。
+ * 公司定價策略僅提供一頁式 NT$15,000–30,000 建議區間，
+ * 以下三檔名稱、金額與內容是供負責人確認的提案，並非既有正式報價。
+ */
+export const pricing = {
+  status: "draft" as "draft" | "published",
+  currency: "TWD",
+  currencyLabel: "NT$",
+  title: "先看預算，找到適合你的第一頁。",
+  description: "依素材準備程度、內容安排與互動需求，先找接近你的建置方向。",
+  draftNotice: "價位提案預覽：以下金額與方案內容尚未核定，未對外刊登。",
+  priceLabel: "預估建置費",
+  priceSuffix: "起",
+  billingNote: "一次性建置費用；實際金額、稅別與付款方式以確認後的報價單為準。",
+  extrasNote:
+    "網域、主機、文案與攝影、第三方服務及後續維護，是否包含及各項費用會在報價單逐項確認。",
+  commonNote:
+    "三種方向均為一頁式網站。先提供現有 Logo、照片與文案，實際區塊、修改範圍、互動及交付環境再一起確認。",
+  plans: [
+    {
+      id: "starter",
+      name: "形象起步",
+      amount: 15000,
+      label: "先讓客人找到重點",
+      audience: "已有文案與照片，想把品牌、服務與聯絡入口整理成一頁。",
+      features: ["品牌與服務資訊編排", "手機與桌面響應版面", "既有洽詢或導航入口"],
+    },
+    {
+      id: "promotion",
+      name: "服務推廣",
+      amount: 22000,
+      label: "讓資訊接上下一步",
+      audience: "服務內容較多，希望客人看懂差異，再帶著明確需求來詢問。",
+      features: ["服務重點與行動順序整理", "情境分類與內容呈現", "頁內需求摘要整理互動"],
+    },
+    {
+      id: "interaction",
+      name: "互動客製",
+      amount: 30000,
+      label: "把選擇整理成需求",
+      audience: "有特定選項、資料整理或品牌呈現需求，需要討論客製的一頁互動。",
+      features: ["依品牌需求規劃版面", "客製選項與摘要互動", "互動流程與交付範圍確認"],
+    },
+  ],
+  source: {
+    url: "https://github.com/xk2022/xplore-kaleidoscope/blob/cd9be948fe843c437d69ed635263a9527e931367/doc/02_services/定價策略.md",
+    blobSha: "59fea2a9d9805bbbfa7407a01ce5ce275a737a77",
+    checkedAt: "2026-11-24",
+    scope: "僅支持 Landing Page 整體建議區間，三檔仍待核定",
+  },
+} as const;
