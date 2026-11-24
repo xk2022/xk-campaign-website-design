@@ -178,12 +178,13 @@ export const scenarioExamples = [
 ] as const;
 
 /**
- * 本輪價位提案，尚未核定；預設不在公開建置中顯示。
+ * 已授權刊登的三種一頁式網站預估起價。
  * 公司定價策略僅提供一頁式 NT$15,000–30,000 建議區間，
- * 以下三檔名稱、金額與內容是供負責人確認的提案，並非既有正式報價。
+ * 三檔為本專案採用的規劃方向；實際條件仍以個案報價單為準。
  */
 export const pricing = {
-  status: "draft" as "draft" | "published",
+  status: "published" as "draft" | "published",
+  publicationDate: "2026-11-24",
   currency: "TWD",
   currencyLabel: "NT$",
   title: "先看預算，找到適合你的第一頁。",
@@ -226,6 +227,6 @@ export const pricing = {
     url: "https://github.com/xk2022/xplore-kaleidoscope/blob/cd9be948fe843c437d69ed635263a9527e931367/doc/02_services/定價策略.md",
     blobSha: "59fea2a9d9805bbbfa7407a01ce5ce275a737a77",
     checkedAt: "2026-11-24",
-    scope: "僅支持 Landing Page 整體建議區間，三檔仍待核定",
+    scope: "來源提供 Landing Page 建議區間；三檔為本頁採用的預估起價，個案條件依報價單確認",
   },
 } as const;
