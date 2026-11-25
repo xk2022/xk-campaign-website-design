@@ -22,6 +22,7 @@ import { PhonePreview } from "@/components/phone-preview";
 import { ScenarioStart } from "@/components/scenario-start";
 import { BriefTool } from "@/components/brief-tool";
 import { PricingSection } from "@/components/pricing-section";
+import { BackToTop } from "@/components/back-to-top";
 import { PainPointsSection, ShowcaseSection, TrustSection, FaqSection } from "@/components/campaign-content";
 
 const scenarioIcons = [Store, Shapes, Ticket];
@@ -36,7 +37,7 @@ export default function Home() {
       <a className="skip-link" href="#main">
         跳至主要內容
       </a>
-      <header className="site-header">
+      <header id="top" tabIndex={-1} className="site-header">
         <div className="container header-inner">
           <a
             href="#"
@@ -327,6 +328,7 @@ export default function Home() {
           </div>
         </div>
       </footer>
+      <BackToTop />
     </>
   );
 }
