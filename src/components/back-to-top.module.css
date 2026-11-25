@@ -1,0 +1,28 @@
+.button {
+  position: fixed;
+  right: calc(20px + env(safe-area-inset-right));
+  bottom: calc(20px + env(safe-area-inset-bottom));
+  z-index: 40;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: 1px solid #fff;
+  border-radius: 50%;
+  background: var(--secondary);
+  color: #fff;
+  box-shadow: 0 4px 16px rgb(16 26 51 / 20%);
+}
+
+.button[hidden] {
+  display: none;
+}
+
+.button:hover {
+  background: var(--primary);
+}
+
+.button:focus-visible {
+  outline: 3px solid var(--secondary);
+  outline-offset: 4px;
+}

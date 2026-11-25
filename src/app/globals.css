@@ -1805,7 +1805,7 @@ h2 {
     padding: 8px 0 8px 8px;
   }
   .site-footer {
-    padding-block: 34px 22px;
+    padding-block: 34px calc(88px + env(safe-area-inset-bottom));
   }
   .footer-top {
     display: block;
