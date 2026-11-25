@@ -60,10 +60,10 @@ for (const width of [375, 390, 768, 1024, 1280, 1440]) {
 }
 
 for (const height of [667, 812]) {
-  test(`375×${height} 首屏能直接操作主要與情境入口`, async ({ page }) => {
+  test(`375×${height} 首屏能直接操作主要與作品入口`, async ({ page }) => {
     await page.setViewportSize({ width: 375, height });
     await load(page);
-    for (const name of ["整理我的建站需求", "看看適合我的情境"]) {
+    for (const name of ["整理我的建站需求", "看看網站作品"]) {
       const link = page.getByRole("link", { name, exact: true });
       const box = await link.boundingBox();
       expect(box).not.toBeNull();
@@ -238,7 +238,7 @@ test("示範→摘要→返回改動作→再次產生→真實剪貼簿，使�
   await page.getByRole("button", { name: "複製需求摘要" }).click();
   await expect(page.getByRole("status")).toHaveText("已複製，可自行貼給 XK");
   expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(latest);
-  await expect(page.getByRole("link", { name: "查看 XK 聯絡資訊" })).toHaveAttribute("href", "https://xk2022.github.io/xk-website/contact/");
+  await expect(page.getByRole("link", { name: "查看 XK 聯絡資訊" })).toHaveAttribute("href", "https://www.xplorekaleidoscope.com/contact/");
 });
 
 test("剪貼簿拒絕時保留全文且提供手動全文選取", async ({ page }) => {
@@ -303,7 +303,7 @@ test("語系、metadata、展示版索引及外部連結皆正確", async ({ pag
   expect(crawlRules).not.toMatch(/^(Disallow|Sitemap):/im);
   const sitemap = await request.get(new URL("sitemap.xml", page.url()).href);
   expect(sitemap.status()).toBe(404);
-  for (const [label, href] of [["XK 官網", "https://xk2022.github.io/xk-website/"], ["完整服務", "https://xk2022.github.io/xk-website/services/"], ["技術作品集", "https://xk2022.github.io/xk-website/portfolio/"]]) {
+  for (const [label, href] of [["XK 官網", "https://www.xplorekaleidoscope.com/"], ["完整服務", "https://www.xplorekaleidoscope.com/services/"], ["技術作品集", "https://www.xplorekaleidoscope.com/portfolio/"]]) {
     await expect(page.getByRole("link", { name: label, exact: true })).toHaveAttribute("href", href);
   }
 });

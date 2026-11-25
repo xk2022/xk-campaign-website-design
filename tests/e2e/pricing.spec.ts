@@ -26,11 +26,13 @@ test("未核定且未開預覽時，不刊登價格區或方案費用入口", as
   await expect(page.getByRole("heading", { name: pricing.title })).toHaveCount(0);
   await expect(page.getByRole("link", { name: planCta })).toHaveCount(0);
   await expect(page.getByText(pricing.draftNotice, { exact: true })).toHaveCount(0);
+  const structuredData = await page.locator('script[type="application/ld+json"]').allTextContents();
   for (const plan of pricing.plans) {
     const amount = new Intl.NumberFormat("zh-TW").format(plan.amount);
     await expect(
       page.getByText(new RegExp(`${escapeRegExp(pricing.currencyLabel)}\\s*${escapeRegExp(amount)}`)),
     ).toHaveCount(0);
+    expect(structuredData.join("\n")).not.toContain(amount);
   }
 });
 

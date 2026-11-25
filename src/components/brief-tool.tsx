@@ -277,6 +277,19 @@ export function BriefTool() {
         <aside className="contact-handoff" aria-labelledby="contact-handoff-title">
           <h4 id="contact-handoff-title">{campaign.contactHandoff.title}</h4>
           <p>{campaign.contactHandoff.description}</p>
+          <div className="summary-actions">
+            <a
+              className="button button-secondary"
+              href={campaign.contactChannels.email.href}
+            >
+              {campaign.contactChannels.email.label}
+              <ArrowUpRight size={18} aria-hidden="true" />
+            </a>
+          </div>
+          <p>{campaign.contactChannels.email.address}</p>
+          <p>
+            會開啟你的郵件程式，請自行貼上摘要並確認寄出。本頁不會自動寄信。
+          </p>
         </aside>
       </div>
     );

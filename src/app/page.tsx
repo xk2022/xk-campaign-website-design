@@ -21,8 +21,8 @@ import {
 import { PhonePreview } from "@/components/phone-preview";
 import { ScenarioStart } from "@/components/scenario-start";
 import { BriefTool } from "@/components/brief-tool";
-import { ScenarioExamples } from "@/components/scenario-examples";
 import { PricingSection } from "@/components/pricing-section";
+import { PainPointsSection, ShowcaseSection, TrustSection, FaqSection } from "@/components/campaign-content";
 
 const scenarioIcons = [Store, Shapes, Ticket];
 
@@ -63,8 +63,8 @@ export default function Home() {
             <a className="nav-link" href="#process">
               合作方式
             </a>
-            <a className="header-cta" href="#brief">
-              整理需求
+            <a className="header-cta" href={campaign.contactChannels.email.href}>
+              Email 詢問
               <ArrowUpRight size={16} />
             </a>
           </nav>
@@ -102,8 +102,8 @@ export default function Home() {
                 整理我的建站需求
                 <ArrowUpRight size={19} />
               </a>
-              <a href="#scenarios" className="button button-secondary">
-                看看適合我的情境
+              <a href="#showcases" className="button button-secondary">
+                看看網站作品
                 <ArrowDown size={18} />
               </a>
             </div>
@@ -132,7 +132,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-        {showPricing && <PricingSection draftPreview={draftPricingPreview} />}
+        <PainPointsSection />
         <section
           id="scenarios"
           className="section container"
@@ -179,8 +179,9 @@ export default function Home() {
               );
             })}
           </div>
-          <ScenarioExamples />
         </section>
+        <ShowcaseSection />
+        {showPricing && <PricingSection draftPreview={draftPricingPreview} />}
         <section
           id="process"
           className="process-section"
@@ -219,13 +220,9 @@ export default function Home() {
               ))}
             </ol>
           </div>
-          <div
-            className="container service-scope"
-            role="group"
-            aria-labelledby="service-scope-title"
-          >
+          <details className="container service-scope scope-details">
+            <summary>{serviceScope.title}</summary>
             <div className="service-scope-heading">
-              <h3 id="service-scope-title">{serviceScope.title}</h3>
               <p>{serviceScope.description}</p>
             </div>
             <div className="service-scope-grid">
@@ -248,8 +245,10 @@ export default function Home() {
             </div>
             <p className="scope-preparation">{serviceScope.preparation}</p>
             <p className="scope-note">{serviceScope.note}</p>
-          </div>
+          </details>
         </section>
+        <TrustSection />
+        <FaqSection />
         <section
           id="brief"
           className="brief-section"
