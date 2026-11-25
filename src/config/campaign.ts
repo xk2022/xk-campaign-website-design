@@ -27,28 +27,87 @@ export const campaign = {
     "從看菜單、找門市，到詢價、報名，XK 協助你把服務整理成手機上就能用的一頁。先用需求整理工具，產生並複製可直接討論的建站需求。",
   pagesPreviewUrl: "https://web.xplorekaleidoscope.com/",
   links: {
-    home: "https://xk2022.github.io/xk-website/",
-    services: "https://xk2022.github.io/xk-website/services/",
-    portfolio: "https://xk2022.github.io/xk-website/portfolio/",
-    contact: "https://xk2022.github.io/xk-website/contact/",
+    home: "https://www.xplorekaleidoscope.com/",
+    services: "https://www.xplorekaleidoscope.com/services/",
+    portfolio: "https://www.xplorekaleidoscope.com/portfolio/",
+    contact: "https://www.xplorekaleidoscope.com/contact/",
   },
-  contactHandoff: {
-    status: "pending",
-    verifiedAt: "2026-11-23",
-    title: "正式聯絡管道確認中",
-    description:
-      "先複製並自行保存摘要。若你已透過介紹或既有對話認識 XK，可自行貼回原對話。官網聯絡頁目前導向網域停放頁，首次接觸請待官網恢復並公布正式管道後再洽詢。",
-    copySuccess: "已複製，可自行貼給 XK",
-    copyHint: "複製不會送出需求，正式聯絡管道確認後再自行提供。",
-    source: {
-      url: "https://github.com/xk2022/xk-website/blob/c124954582edc2af3a24c187c1c937a73035a851/src/config/contact.ts",
-      blobSha: "121ba6506ba5420c6d699e6ef8e67725f7188f92",
-      verification: "source-and-browser-redirect",
-      browserResult: "官網 contact/ 轉址至 https://xplorekaleidoscope.com/lander（網域停放頁）",
+  contactChannels: {
+    email: {
+      label: "Email 專案詢價",
+      href: "mailto:system.xk2022@gmail.com",
+      address: "system.xk2022@gmail.com",
     },
   },
-  // 本廣告頁不呈現具名案例或「查看展示」；避免把自主展示當作客戶實績。
-  casePublication: { showNamedCases: false, displayLinks: [] as string[] },
+  contactHandoff: {
+    status: "available",
+    verifiedAt: "2026-11-25",
+    title: "把摘要帶給 XK，開始討論。",
+    description:
+      "複製摘要後，可使用官網公開的專案詢價 Email。若你已透過介紹或既有對話認識 XK，也可以自行貼回原對話。",
+    copySuccess: "已複製，可自行貼給 XK",
+    copyHint: "複製不會送出需求。開啟郵件程式後，請自行貼上摘要並確認寄出。",
+    source: {
+      url: "https://github.com/xk2022/xk-website/blob/1e16144c21a848399e2986948d4239481672f12c/src/config/contact.ts",
+      blobSha: "323c2d201f956bda7734ffca4ee5b90aec765edf",
+      verification: "source-and-live-page",
+      browserResult: "官網 contact/ 已恢復並公開 Email 專案詢價",
+    },
+  },
+  // 僅列可開啟的自主展示；不代表付費客戶、委託交付或品牌背書。
+  casePublication: {
+    showNamedCases: true,
+    displayLinks: [
+      "https://showcase.xplorekaleidoscope.com/march-tangbao/",
+      "https://honest.xplorekaleidoscope.com/",
+      "https://honbird.xplorekaleidoscope.com/",
+    ],
+  },
+} as const;
+
+export const painPoints = [
+  { title: "資訊散在好幾個地方？", description: "菜單在社群、地址在名片，把客人常找的資訊集中在同一頁。" },
+  { title: "每次都從頭解釋服務？", description: "先讓客人看懂用途、樣本與差異，帶著具體問題來詢問。" },
+  { title: "看完介紹，卻不知道怎麼開始？", description: "替這一頁選一個主要動作，接到導航、詢價或已確認的報名入口。" },
+] as const;
+
+/** 公開自主展示；截圖來源與核對紀錄見 doc/04_campaign_optimization_2026-11-25.md。 */
+export const showcases = [
+  {
+    id: "march-tangbao", name: "三月手工湯包", category: "在地店家",
+    image: `${basePath}/showcases/march-tangbao.webp`,
+    href: campaign.casePublication.displayLinks[0],
+    need: "第一次來的客人，想先看餐點、找到門市，再整理預留需求。",
+    actions: ["菜單與餐點介紹", "門市導航入口", "預留訊息整理"],
+    note: "自主展示，非客戶委託交付。餐點為生成示意素材，預留操作不代表訂單成立。",
+  },
+  {
+    id: "honest-diecut", name: "宏能興業", category: "製造與企業服務",
+    image: `${basePath}/showcases/honest-diecut.webp`,
+    href: campaign.casePublication.displayLinks[1],
+    need: "採購知道使用情境，但需要樣本分類，才能說清楚加工需求。",
+    actions: ["加工樣本分類", "帶入加工類別", "模擬詢價摘要"],
+    note: "自主展示，非客戶委託交付。加工樣本為生成示意素材，詢價不會自動送出。",
+  },
+  {
+    id: "hongjia-birdnest", name: "宏家燕窩", category: "品牌推廣",
+    image: `${basePath}/showcases/hongjia-birdnest.webp`,
+    href: campaign.casePublication.displayLinks[2],
+    need: "送給親友或企業贈禮，需要不同的資訊與洽詢起點。",
+    actions: ["親友與企業送禮情境", "品牌與產品資訊", "模擬洽詢摘要"],
+    note: "自主展示，非客戶委託交付。產品為生成示意素材，並非購物或活動報名系統。",
+  },
+] as const;
+
+export const brandTrust = {
+  title: "和 XK 一起，把需求做成能操作的頁面。",
+  description: "Xplore Kaleidoscope 由軟體工程師創立，從需求釐清、頁面實作到操作驗收，讓內容和功能一起被確認。",
+  points: [
+    { title: "從你的生意開始", description: "先確認給誰看、希望完成什麼，再討論內容與技術。" },
+    { title: "用實際操作確認", description: "在手機與桌面預覽，逐一核對文案、連結、提示與互動結果。" },
+    { title: "交付與維護先說清楚", description: "原始碼、部署協助、修改範圍與後續維護方式，逐項寫入個案提案。" },
+  ],
+  source: "https://github.com/xk2022/xk-website/blob/1e16144c21a848399e2986948d4239481672f12c/src/config/about.ts",
 } as const;
 
 export const scenarios = [
@@ -151,32 +210,6 @@ export const serviceScope = {
   ],
 } as const;
 
-/** 自行設計的靜態介面示意；不代表真實品牌、可送出的功能或客戶實績。 */
-export const scenarioExamples = [
-  {
-    id: "business",
-    label: "製造與企業服務",
-    title: "讓用途，成為詢價的起點。",
-    brand: "微型加工服務（虛構）",
-    heading: "先找接近你需求的加工類別",
-    options: ["保護膜模切", "工業標籤", "其他加工"],
-    detailLabel: "詢價前可以整理",
-    detail: "用途、材料、尺寸與預估數量；還不確定的規格也能註明。",
-    action: "整理詢價需求",
-  },
-  {
-    id: "campaign",
-    label: "品牌與活動推廣",
-    title: "讓活動資訊，接上參與的下一步。",
-    brand: "週末品牌體驗（虛構）",
-    heading: "先看看哪種參與方式適合你",
-    options: ["個人參與", "企業包場", "想先詢問"],
-    detailLabel: "報名前先看清楚",
-    detail: "活動內容、日期與地點，依主辦方確認資訊刊登。",
-    action: "確認入口後前往報名",
-  },
-] as const;
-
 /**
  * 已授權刊登的三種一頁式網站預估起價。
  * 公司定價策略僅提供一頁式 NT$15,000–30,000 建議區間，
@@ -230,3 +263,33 @@ export const pricing = {
     scope: "來源提供 Landing Page 建議區間；三檔為本頁採用的預估起價，個案條件依報價單確認",
   },
 } as const;
+
+/** 可見 FAQ 與 FAQPage 使用同一份文字；不代表搜尋成效或收錄承諾。 */
+export const faqItems = [
+  {
+    question: "一頁式網站大概需要多少費用？",
+    answer: pricing.status === "published"
+      ? `目前提供${pricing.plans.map((plan) => `${plan.name} NT$${new Intl.NumberFormat("zh-TW").format(plan.amount)} 起`).join("、")}三種方向，均為一次性建置的預估起價。實際金額、稅別、付款，以及網域、主機與維護是否包含，會在報價單逐項確認。`
+      : "費用依內容、素材與互動需求逐案確認。實際金額、稅別、付款，以及網域、主機與維護是否包含，會在報價單逐項確認。",
+  },
+  {
+    question: "一頁式網站和多頁網站，該怎麼選？",
+    answer: "如果這次要說清楚一項服務、店家資訊或一場活動，並引導一個主要動作，一頁式通常是合適的討論起點。若有大量產品、文章、多語內容、會員或交易流程，應先評估多頁網站或系統需求，再確認範圍。",
+  },
+  {
+    question: "還沒有文案、Logo 或照片，也可以開始嗎？",
+    answer: "可以先整理需求，並在素材欄選擇「尚未準備」。現有社群、服務說明及客人常問的問題，都能作為討論起點；文案、攝影或額外素材製作是否納入及費用，會另外確認。",
+  },
+  {
+    question: "製造服務或活動，也適合做一頁式網站嗎？",
+    answer: "可以依主要動作規劃，例如用加工樣本協助整理詢價，或集中活動資訊並連到主辦方確認的報名入口。後台、自動寄信、金流及外部系統串接，需要另外確認，不因有需求整理表單就自動包含。",
+  },
+  {
+    question: "多久能完成？可以修改幾次？上線後誰維護？",
+    answer: "會依素材完整度、頁面內容、互動複雜度及可安排的工作時間確認。交期、修改範圍與次數、驗收、部署及後續維護更新方式，都會在開始前寫入個案提案，沒有統一固定交期或不限次修改。",
+  },
+  {
+    question: "產生摘要後，會自動寄給 XK 嗎？",
+    answer: "不會。內容只在本頁記憶體整理，重新整理就會清空。請先複製摘要，再透過官網公開的 Email 專案詢價入口開啟郵件程式，自行貼上並確認寄出；若裝置沒有設定郵件程式，可在自己的信箱手動建立郵件。",
+  },
+] as const;

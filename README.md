@@ -2,11 +2,17 @@
 
 # XK 一頁式網站建置服務廣告頁
 
-[![Verify and deploy GitHub Pages](https://github.com/xk2022/xk-campaign-website-design/actions/workflows/pages.yml/badge.svg)](https://github.com/xk2022/xk-campaign-website-design/actions/workflows/pages.yml)
+[![Verify and deploy GitHub Pages](https://github.com/xk2022/xk-website-lp-campaign/actions/workflows/pages.yml/badge.svg)](https://github.com/xk2022/xk-website-lp-campaign/actions/workflows/pages.yml)
 
 獨立專案 `xk-campaign-website-design`。首頁 `/`，繁體中文、手機優先，主要完成動作為「產生並複製需求摘要」。使用 Next.js App Router、React、TypeScript、Tailwind CSS 4 與 Lucide。GitHub Actions 驗證靜態輸出，通過後將同一份產物部署至 GitHub Pages。專案與 XK 官網及公司文件庫分開維護。
 
 本頁為 Xplore Kaleidoscope（XK）自主製作的服務推廣預覽，依 P01 Website Development、W01 一頁式網站規格開發，對應 R01 網站建置。公開展示使用 GitHub Pages。
+
+## 2026-11-25 內容與洽詢優化
+
+依提供的顧問建議重排「痛點 → 情境 → 可操作的自主展示 → 價格 → 合作 → 品牌 → FAQ → 需求工具」，保留首屏起價及主要需求入口，另提供作品與公開 Email 入口。新增三個自主展示，明示非客戶委託交付及生成示意素材；移除重複的兩張虛構示意卡。三檔已刊登價格不變。FAQ 與 FAQPage 共用資料，仍保留 `noindex, nofollow`。
+
+實作、來源、連結及驗收詳見 [2026-11-25 優化紀錄](doc/04_campaign_optimization_2026-11-25.md)。目前遠端 repo 名稱為 `xk-website-lp-campaign`；本機資料夾與 npm package 名稱保留原名，不影響獨立啟動或自訂網域部署。
 
 ## 方案費用
 
@@ -21,7 +27,7 @@
 在本專案根目錄執行（Node.js 24.x、npm；`.nvmrc` 為 `24`）：
 
 ```bash
-git clone https://github.com/xk2022/xk-campaign-website-design.git
+git clone https://github.com/xk2022/xk-website-lp-campaign.git xk-campaign-website-design
 cd xk-campaign-website-design
 nvm use
 npm ci
@@ -39,8 +45,8 @@ npm start -- --port 3000
 
 ## GitHub Actions 與 GitHub Pages
 
-- 原始碼：[xk2022/xk-campaign-website-design](https://github.com/xk2022/xk-campaign-website-design)
-- 驗證與部署：[Verify and deploy GitHub Pages](https://github.com/xk2022/xk-campaign-website-design/actions/workflows/pages.yml)
+- 原始碼：[xk2022/xk-website-lp-campaign](https://github.com/xk2022/xk-website-lp-campaign)
+- 驗證與部署：[Verify and deploy GitHub Pages](https://github.com/xk2022/xk-website-lp-campaign/actions/workflows/pages.yml)
 - 公開展示：**https://web.xplorekaleidoscope.com/**
 - 原 GitHub Pages 網址 https://xk2022.github.io/xk-campaign-website-design/ 目前會轉址至上述自訂網域。
 
@@ -70,9 +76,9 @@ npm run preview:pages -- --port 3002
 - `build:pages` 只在該次 build 注入 `STATIC_EXPORT=true` 與 `NEXT_PUBLIC_BASE_PATH=/xk-campaign-website-design`；一般 `npm run dev` 的首頁仍是 `/`。
 - 若自行設定 `NEXT_PUBLIC_BASE_PATH`，建置與預覽時必須使用相同值；預設不需額外設定環境變數。
 - Pages build 使用 `output: export`、trailing slash 及靜態圖片；Logo／符號路徑與 Next.js 資產都包含同一個 basePath。
-- 官網導流使用原本的完整絕對網址，不受廣告頁 basePath 影響。
+- 官網導流使用已核對的完整絕對網址，不受廣告頁 basePath 影響。
 - 更換 repo 名稱或自訂網域時，一併核對 build 的 basePath、workflow 測試 URL、`campaign.pagesPreviewUrl` 與 README 網址。
-- 預覽頁保留 `noindex, nofollow`。官方 favicon 和 Open Graph 分享圖隨靜態輸出，分享圖使用預定 Pages 子路徑。待正式廣告網址核定後再設定 canonical、`og:url` 與 sitemap。`robots.txt` 讓爬蟲可讀取頁面的 `noindex` 標籤，專案子路徑下的檔案不取代網域根目錄的爬取規則。
+- 預覽頁保留 `noindex, nofollow`。官方 favicon 和 Open Graph 分享圖隨靜態輸出，分享圖跟隨建置時的 basePath。待正式廣告網址核定後再設定 canonical、`og:url` 與 sitemap。`robots.txt` 讓爬蟲可讀取頁面的 `noindex` 標籤，專案子路徑下的檔案不取代網域根目錄的爬取規則。
 
 靜態產物完整驗收（POSIX shell；Windows 可在 shell 中設定相同環境變數）：
 
@@ -102,14 +108,16 @@ NEXT_PUBLIC_BASE_PATH="" npm run preview:pages -- --port 3007
 | `src/app/globals.css`、`src/app/fonts.css` | 手機優先版面、品牌視覺、表單、換行與可見焦點、減少動態偏好 |
 | `src/config/campaign.ts` | **品牌名稱／正式 Logo 路徑／色票／字型、情境、動作、素材、外部網址、價位方案／刊登狀態與案例公開策略** |
 | `src/components/pricing-section.tsx`、`pricing-section.module.css` | Server Component：三檔預估起價、費用條件與前往需求工具的入口 |
-| `src/components/scenario-examples.tsx` | Server Component：製造／活動的靜態虛構介面示意 |
+| `src/components/campaign-content.tsx`、`campaign-content.module.css` | Server Components：痛點、可開啟的自主展示、品牌／Email 與原生 FAQ／JSON-LD |
+| `public/showcases/` | 固定官網來源的三張 WebP，來源、尺寸及日期見本輪優化紀錄 |
 | `scripts/measure-fonts.mjs` | 可重現的冷 Chromium 字型／CSS 載入量測 |
 | `src/components/phone-preview.tsx` | Server Component：自行設計的手機頁面與店面向量插畫，明示「介面示意」及虛構品牌 |
 | `src/components/scenario-start.tsx` | Client Component：情境選取、定位表單與情境欄焦點 |
 | `src/components/brief-tool.tsx` | Client Component：記憶體草稿、驗證、摘要、複製／拒絕複製與返回修改 |
 | `src/lib/brief.ts` | 表單型別、虛構示範資料、素材互斥、欄位驗證與自然中文摘要 |
-| `src/components/brief-tool.test.tsx` | 表單互動回歸測試；另有 `src/lib/brief.test.ts` 覆蓋 Unicode 與摘要文案，共 31 項 |
+| `src/components/brief-tool.test.tsx` | 表單互動回歸測試；另有 `src/lib/brief.test.ts` 覆蓋 Unicode 與摘要文案，共 32 項 |
 | `tests/e2e/campaign.spec.ts` | Playwright 驗收六種視窗寬度、首頁、摘要及 Pages 子路徑資源 |
+| `tests/e2e/content.spec.ts` | 版序、作品資源、FAQ 鍵盤／結構化資料、Email 與草稿隔離 |
 | `tests/e2e/pricing.spec.ts` | 刊登狀態、手機首屏費用入口、三方案與草稿保留驗收 |
 | `public/brand/` | 公司庫正式 Logo 03 的原始 SVG 與 PNG 分享圖 |
 | `.nvmrc`、`package-lock.json`、`package.json` | Node 24 與可獨立安裝、啟動、檢查及建置的工程基準 |
@@ -145,22 +153,26 @@ NEXT_PUBLIC_BASE_PATH="" npm run preview:pages -- --port 3007
 
 UI 使用深藍 `#101A33`、亮藍 `#3157D5`、青色 `#19B8D5`；正式 Logo 原稿色保留 `#101828`／`#2563EB`。字型為 Inter／Noto Sans TC 的 variable 版本（CSS 家族名稱帶 Variable），備援為 Microsoft JhengHei、PingFang TC、Arial。焦點使用亮藍 2px 外框及 4px 間距（輸入欄為 3px）。
 
-不展示具名作品卡、案例截圖或「查看展示」，亦不聲稱參考品牌是付費客戶。四個品牌的[官網來源設定](https://github.com/xk2022/xk-website/blob/main/src/config/website-showcases.ts)已唯讀核對為自主品牌展示；其個別展示頁未另開啟，因本廣告頁沒有提供這些連結。`casePublication.showNamedCases` 為 `false`。手機內的「山角日常」完全為虛構介面示意。
+目前提供三張可開啟的**自主展示**作品卡，不宣稱為付費客戶、委託交付或品牌背書。`campaign.casePublication` 管理公開策略與可用網址；`showcases` 管理案例文字、圖片與動作。首屏手機內的「山角日常」仍為虛構介面示意。截圖源自官網固定 commit，保存的是 2026-11-21 畫面，可能與展示站新版細節不同；來源見本輪紀錄。
 
-## 外部連結核對
+## 外部連結核對（2026-11-25）
 
-四頁均已核對來源路由；2026-11-21 曾以 Cloud Chrome 開啟正常內容。**2026-11-23 重新實開**發現官網正在使用自訂網域，結果與原始檢查不同：
+2026-11-23 的網域停放／聯絡待確認問題為歷史狀態。此次重新核對官網來源及 Cloud Chrome，官網已恢復並正式公開 `system.xk2022@gmail.com`。本專案改用實際可開啟的 www 官網絕對網址，沒有修改官網 repo、DNS 或聯絡帳號。
 
-| 畫面入口 | 保留的指定 URL | 本輪 Cloud Chrome 結果 |
+| 入口 | 現行完整網址 | 核對結果 |
 | --- | --- | --- |
-| XK 官網 | https://xk2022.github.io/xk-website/ | 轉到 `https://xplorekaleidoscope.com/lander`，GoDaddy 網域停放頁 |
-| 完整服務 | https://xk2022.github.io/xk-website/services/ | 轉到同一網域停放頁 |
-| 技術作品集 | https://xk2022.github.io/xk-website/portfolio/ | 轉到 `https://xplorekaleidoscope.com/portfolio/`，讀到作品展示內容；其中部分內連仍帶舊 basePath |
-| 查看 XK 聯絡資訊 | https://xk2022.github.io/xk-website/contact/ | 轉到網域停放頁，無法由此提交需求 |
+| XK 官網 | https://www.xplorekaleidoscope.com/ | Cloud Chrome 開啟首頁內容 |
+| 完整服務 | https://www.xplorekaleidoscope.com/services/ | Cloud Chrome 開啟服務內容 |
+| 技術作品集 | https://www.xplorekaleidoscope.com/portfolio/ | Cloud Chrome 開啟作品內容 |
+| 查看 XK 聯絡資訊 | https://www.xplorekaleidoscope.com/contact/ | Cloud Chrome 開啟，核對公開 Email 專案詢價 |
+| Email 專案詢價 | `mailto:system.xk2022@gmail.com` | 來源碼及可見官方入口一致；未寄送測試信 |
+| 三月手工湯包 | https://showcase.xplorekaleidoscope.com/march-tangbao/ | HTTP 200、Cloud Chrome 示範 → 預留訊息；未開啟或發送 LINE |
+| 宏能興業 | https://honest.xplorekaleidoscope.com/ | HTTP 200、Cloud Chrome PET 樣本帶入加工類別 |
+| 宏家燕窩 | https://honbird.xplorekaleidoscope.com/ | HTTP 200、Cloud Chrome 企業贈禮帶入表單 |
 
-本廣告頁依原規格保留完整絕對網址，不修改唯讀的官網 repo 或 DNS。頁面摘要旁已如實提醒目前聯絡頁導向狀態、先自行保存、已有聯絡對話者可自行分享。官網來源 `src/config/contact.ts` 仍為 `verifiedContactChannels=[]`（核對來源與日期在 `campaign.contactHandoff`），沒有自行新增 LINE、Email 或預約管道。**官網轉址／正式聯絡管道仍待維護者及業務處理**，不能將本站功能修復解讀為上述官網也已修復。
+Email 只開啟訪客的郵件程式，摘要需自行貼上並確認寄出；所有本站 `mailto:` 均不帶查詢字串或草稿。若未設定郵件程式，信箱地址也顯示為可選取文字。沒有新增 LINE、預約、免費諮詢承諾或寄信 API。
 
-## 檢查與瀏覽器驗收
+## 歷史檢查與瀏覽器驗收（2026-11-23）
 
 本輪修復驗證日期：**2026-11-23（Asia/Taipei）**。環境：Node.js **v24.22.3**、npm **11.19.1**。lockfile 實際安裝 Next.js **16.4.6**。所有命令從本專案根目錄執行。
 
@@ -227,6 +239,6 @@ Q011 補充環境：官方 Playwright WebKit 27.2 已下載，實際啟動受本
 
 ### 本輪發布結果
 
-2026-11-23 已合併 [修復 PR #5](https://github.com/xk2022/xk-campaign-website-design/pull/5)。[main Actions 45053375629](https://github.com/xk2022/xk-campaign-website-design/actions/runs/45053375629) 驗證與部署均成功，公開 `version.json` 已核對來源 `a2e3bedbf6cca59cec0530d13bae6d8a639198d9`、`clean`、空 basePath。Cloud Chrome 實際走完示範、返回修改其他動作、重新產生及複製，觀察最新摘要與成功提示；品牌資產、分享圖、favicon 與 robots.txt 均正常。
+2026-11-23 已合併 [修復 PR #5](https://github.com/xk2022/xk-website-lp-campaign/pull/5)。[main Actions 45053375629](https://github.com/xk2022/xk-website-lp-campaign/actions/runs/45053375629) 驗證與部署均成功，公開 `version.json` 已核對來源 `a2e3bedbf6cca59cec0530d13bae6d8a639198d9`、`clean`、空 basePath。Cloud Chrome 實際走完示範、返回修改其他動作、重新產生及複製，觀察最新摘要與成功提示；品牌資產、分享圖、favicon 與 robots.txt 均正常。
 
-詳細分階段結果與日期保留在 [品質待辦的發布紀錄](doc/02_quality_backlog_2026-11-23.md)。這是 PR #5 功能版本的歷史紀錄；後續純文件部署另有來源 SHA，以該次 Actions 與公開版本檔為準。Q001 正式官網／聯絡承接及 Q011 實機／WebKit 驗收仍保留待辦。
+詳細分階段結果與日期保留在 [品質待辦的發布紀錄](doc/02_quality_backlog_2026-11-23.md)。這是 PR #5 功能版本的歷史紀錄；後續純文件部署另有來源 SHA，以該次 Actions 與公開版本檔為準。當時 Q001 正式官網／聯絡承接及 Q011 實機／WebKit 驗收仍保留待辦；Q001 的 2026-11-25 更新見本輪優化紀錄，Q011 仍待實機驗收。

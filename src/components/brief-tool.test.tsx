@@ -7,6 +7,7 @@ import {
 } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { BriefTool } from "./brief-tool";
+import { campaign } from "@/config/campaign";
 
 describe("建站需求整理工具", () => {
   it("從情境入口切換時只改情境，保留所有手動草稿", () => {
@@ -157,6 +158,42 @@ describe("建站需求整理工具", () => {
     expect(summary.split("\n")[1]).toBe("希望訪客完成的主要動作：我想讓客人下載型錄。");
     fireEvent.click(screen.getByRole("button", { name: "複製需求摘要" }));
     await waitFor(() => expect(writeText).toHaveBeenCalledWith(summary));
+  });
+
+  it("摘要修改後聯絡入口仍是公開管道，不把草稿附加至 Email 或官網網址", () => {
+    render(<BriefTool />);
+    fireEvent.click(screen.getByRole("button", { name: "帶入示範資料" }));
+    fireEvent.change(screen.getByLabelText(/品牌或專案名稱/), {
+      target: { value: "私有草稿品牌" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "產生需求摘要" }));
+
+    function expectPublicContactLinks() {
+      expect(screen.getByRole("link", { name: "Email 專案詢價" }))
+        .toHaveAttribute("href", "mailto:system.xk2022@gmail.com");
+      expect(screen.getByRole("link", { name: "查看 XK 聯絡資訊" }))
+        .toHaveAttribute("href", campaign.links.contact);
+      for (const link of screen.getAllByRole("link")) {
+        expect(link.getAttribute("href")).not.toContain("?");
+        expect(link.getAttribute("href")).not.toContain("私有草稿品牌");
+        expect(link.getAttribute("href")).not.toContain("subject=");
+        expect(link.getAttribute("href")).not.toContain("body=");
+      }
+    }
+
+    expectPublicContactLinks();
+    expect(screen.getByText(/會開啟你的郵件程式，請自行貼上摘要並確認寄出/))
+      .toBeVisible();
+    fireEvent.click(screen.getByRole("button", { name: "返回修改" }));
+    fireEvent.change(screen.getByLabelText(/希望訪客做什麼/), {
+      target: { value: "報名" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "產生需求摘要" }));
+    expect((screen.getByLabelText("需求摘要全文") as HTMLTextAreaElement).value)
+      .toContain("完成報名");
+    expect((screen.getByLabelText("需求摘要全文") as HTMLTextAreaElement).value)
+      .not.toContain("提出詢價");
+    expectPublicContactLinks();
   });
 
   it("長摘要依全文高度展開，聚焦及重排後重新量高，拒絕複製仍可選取全文", async () => {
