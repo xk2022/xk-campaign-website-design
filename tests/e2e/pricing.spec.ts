@@ -1,5 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
-import { materialOptions, pricing } from "../../src/config/campaign";
+import { materialOptions, pricing } from "../../frontend/src/config/campaign";
 
 const pricingEnabled =
   pricing.status === "published" || process.env.XK_PRICING_PREVIEW === "true";

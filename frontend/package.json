@@ -12,7 +12,7 @@
     "build:pages": "node scripts/build-pages.mjs",
     "preview:pages": "node scripts/serve-pages.mjs",
     "start": "next start --hostname 0.0.0.0",
-    "lint": "eslint . --max-warnings=0",
+    "lint": "node scripts/lint.mjs",
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run",
     "test:e2e": "playwright test"

@@ -4,243 +4,183 @@
 
 [![Verify and deploy GitHub Pages](https://github.com/xk2022/xk-website-lp-campaign/actions/workflows/pages.yml/badge.svg)](https://github.com/xk2022/xk-website-lp-campaign/actions/workflows/pages.yml)
 
-獨立專案 `xk-campaign-website-design`。首頁 `/`，繁體中文、手機優先，主要完成動作為「產生並複製需求摘要」。使用 Next.js App Router、React、TypeScript、Tailwind CSS 4 與 Lucide。GitHub Actions 驗證靜態輸出，通過後將同一份產物部署至 GitHub Pages。專案與 XK 官網及公司文件庫分開維護。
+將店家、企業服務與品牌推廣的需求，整理成可在手機使用的一頁式網站；訪客可在本頁產生並複製建站需求，再自行透過公開 Email 向 XK 洽詢。
 
-本頁為 Xplore Kaleidoscope（XK）自主製作的服務推廣預覽，依 P01 Website Development、W01 一頁式網站規格開發，對應 R01 網站建置。公開展示使用 GitHub Pages。
+## 專案資訊
 
-## 2026-11-25 內容與洽詢優化
+| 項目 | 內容 |
+| --- | --- |
+| Repository | [xk2022/xk-website-lp-campaign](https://github.com/xk2022/xk-website-lp-campaign) |
+| 網站類型 | Landing Page／一頁式服務廣告 |
+| 專案性質 | XK 自主規劃，非客戶委託交付 |
+| 專案狀態 | proposal：公開服務推廣預覽，維持 `noindex, nofollow` |
+| 主要使用者 | 店家老闆、中小企業窗口、活動承辦人 |
+| 主要完成動作 | 產生並複製需求摘要 |
+| 公開入口 | https://web.xplorekaleidoscope.com/ |
+| 部署管理 | 本 repo 的 GitHub Actions／GitHub Pages |
+| 維護狀態 | 持續維護 |
+| 最後更新 | 2026-11-27（Asia/Taipei） |
 
-2026-11-25 追加：右下角提供 48px「回到最上面」漂浮箭頭，往下捲動後顯示。使用原生頁內連結返回頁首並移動焦點，沿用減少動態偏好；手機頁尾預留空間，需求草稿不受影響。375／1440px 點擊回頂、頁首焦點、減少動態效果與 Enter 保留草稿共 3 項 Chromium 驗收通過；Node24 的 lint、typecheck、32 項單元測試及一般／靜態建置皆通過。
+## 核心功能與限制
 
-依提供的顧問建議重排「痛點 → 情境 → 可操作的自主展示 → 價格 → 合作 → 品牌 → FAQ → 需求工具」，保留首屏起價及主要需求入口，另提供作品與公開 Email 入口。新增三個自主展示，明示非客戶委託交付及生成示意素材；移除重複的兩張虛構示意卡。三檔已刊登價格不變。FAQ 與 FAQPage 共用資料，仍保留 `noindex, nofollow`。
+- 三種情境入口只更新情境，保留手填草稿；提供虛構示範資料、必填驗證與第一錯誤焦點、素材互斥、摘要修改及剪貼簿拒絕時的手動選取。
+- 三檔預估建置起價為形象起步 **NT$15,000**、服務推廣 **NT$22,000**、互動客製 **NT$30,000**，自 2026-11-24 授權刊登。一次性建置費、稅別、付款、網域／主機及維護是否包含，依個案報價單確認。
+- 提供可操作的自主展示、合作說明、FAQ／同源 FAQPage，以及右下角的回頂箭頭；未把自主展示當成付費客戶或交付實績。
+- 草稿只存在當頁記憶體，重新整理即清空；沒有 API、後台、追蹤或瀏覽器儲存，不把草稿加進網址。Email 只開啟訪客的郵件程式，須自行貼上摘要並確認寄出。
+- 預覽版保留 `noindex, nofollow`；canonical、`og:url` 與 sitemap 待正式索引政策核定。沒有固定交期、成效數字、評論或自造的 LINE／預約入口。
 
-實作、來源、連結及驗收詳見 [2026-11-25 優化紀錄](doc/04_campaign_optimization_2026-11-25.md)。目前遠端 repo 名稱為 `xk-website-lp-campaign`；本機資料夾與 npm package 名稱保留原名，不影響獨立啟動或自訂網域部署。
+## 公司架構對齊（2026-11-27）
 
-## 方案費用
+本輪依公司最新 [網站 README／專案結構規範](https://github.com/xk2022/xplore-kaleidoscope/blob/76252e621ecb5c508494b49d4cd1eabd340b7e81/06_engineering/website-project-readme-template.md) 與 [架構選型](https://github.com/xk2022/xplore-kaleidoscope/blob/76252e621ecb5c508494b49d4cd1eabd340b7e81/06_engineering/architecture.md) 調整。公司庫只讀；未修改官網、公司文件或中央展示庫。
 
-三種價位方案已於 2026-11-24 授權刊登：形象起步 **NT$15,000 起**、服務推廣 **NT$22,000 起**、互動客製 **NT$30,000 起**，均為一次性建置的預估起價。方案集中於 `src/config/campaign.ts` 的 `pricing`，正式建置預設顯示；稅別、付款、網域／主機與維護等費用仍逐案列入報價單確認。[方案來源、條件與驗證紀錄](doc/03_pricing_proposal_2026-11-24.md) 保留原提案與採用經過。
+```text
+xk-website-lp-campaign/
+├── .github/workflows/pages.yml
+├── docs/                       # 專案需求、來源、修復與驗收紀錄
+├── frontend/
+│   ├── AGENTS.md               # Next.js 版本指引
+│   ├── package.json
+│   ├── package-lock.json
+│   ├── next.config.ts
+│   ├── playwright.config.ts
+│   ├── vitest.config.ts
+│   ├── scripts/                # 前端建置、靜態預覽及量測
+│   ├── public/                 # 正式 Logo 與展示截圖
+│   └── src/
+│       ├── app/                # 首頁、layout、metadata、樣式
+│       ├── components/         # 既有 Server 元件及互動 islands
+│       ├── config/campaign.ts  # 品牌、情境、價格、連結及公開狀態
+│       ├── lib/                # 需求驗證與摘要純函式
+│       └── test/               # 單元測試共用設定
+├── backend/README.md           # 目前沒有後端服務
+├── infrastructure/README.md    # 既有 Pages 部署位置與邊界
+├── tests/e2e/                  # 跨元件瀏覽器驗收
+├── .nvmrc                      # 24
+├── AGENTS.md
+└── README.md
+```
 
-## 品質待辦與後續修復
+前端套件、鎖檔、設定、程式與資產均已搬至 `frontend/`；`doc/` 改為 `docs/`。程式內部保持現有模組與 Server／Client 界線，未為分類新增空的功能模組。框架維持 Next.js App Router、React、TypeScript、Tailwind CSS 4、Lucide；沒有依賴升級。
 
-[2026-11-23 品質待辦與修復紀錄](doc/02_quality_backlog_2026-11-23.md) 整理 2026-11-22 檢查發現，包含項目編號、優先度、證據、驗收條件與建議分支。可重用的開工命令見 [一頁式專案命令範本](doc/01_one_page_solution.md)。後續修復請指定項目編號，從最新 `main` 建立對應分支，並更新該檔的日期與狀態。已確認缺陷、產品改善、業務待確認及待驗證項目分開追蹤。
+**npm 指令現在從 `frontend/` 執行。** 根目錄可用 `npm --prefix frontend ...`，不另建根套件或重複鎖檔。套件名仍保留 `xk-campaign-website-design`，因此預設的本機子路徑驗收仍使用此名稱；自訂網域部署為空 basePath。
 
 ## 安裝與本機啟動
 
-在本專案根目錄執行（Node.js 24.x、npm；`.nvmrc` 為 `24`）：
+Node.js **24.x**、npm，版本由根目錄 `.nvmrc` 與前端 `engines` 固定。
 
 ```bash
-git clone https://github.com/xk2022/xk-website-lp-campaign.git xk-campaign-website-design
-cd xk-campaign-website-design
+git clone https://github.com/xk2022/xk-website-lp-campaign.git
+cd xk-website-lp-campaign
 nvm use
+cd frontend
 npm ci
 npm run dev -- --port 3000
 ```
 
-開啟 **http://localhost:3000/** 或 **http://127.0.0.1:3000/**。若沒有 nvm，先以慣用方式安裝 Node.js 24，再從 `npm ci` 開始。移至其他電腦時，將 `cd` 改成本專案所在位置即可；不依賴任何上層 repo、環境變數或私有套件。
+首頁為 **http://localhost:3000/**（連接埠 **3000**）。沒有 nvm 時，先安裝 Node.js 24，再執行 `npm ci`。已在 repo 根目錄時，也可執行：
 
-一般 Next.js 模式的 production 預覽：
+```bash
+npm --prefix frontend ci
+npm --prefix frontend run dev -- --port 3000
+```
+
+一般 production 預覽（在 `frontend/`）：
 
 ```bash
 npm run build
 npm start -- --port 3000
 ```
 
-## GitHub Actions 與 GitHub Pages
+## 建置與測試
 
-- 原始碼：[xk2022/xk-website-lp-campaign](https://github.com/xk2022/xk-website-lp-campaign)
-- 驗證與部署：[Verify and deploy GitHub Pages](https://github.com/xk2022/xk-website-lp-campaign/actions/workflows/pages.yml)
-- 公開展示：**https://web.xplorekaleidoscope.com/**
-- 原 GitHub Pages 網址 https://xk2022.github.io/xk-campaign-website-design/ 目前會轉址至上述自訂網域。
-
-2026-11-23 重新核對 Pages API：`build_type: workflow`、`cname: web.xplorekaleidoscope.com`、HTTPS 啟用。自訂網域從根目錄提供頁面，因此 CI 設定 `NEXT_PUBLIC_BASE_PATH=""`；沒有變更網域、DNS、repo 可見性或 Pages 管理設定。API 的 `source.branch: gh-pages` 為既有欄位，不能據此判斷目前採分支發布。
-
-`.github/workflows/pages.yml` 在 PR、推送 `main` 及手動執行時啟動：
-
-1. Node.js 24 執行 `npm ci`、lint、typecheck、單元測試與一般 Next.js build。
-2. 以自訂網域根路徑執行 `build:pages`，檢查首頁、資產、`.nojekyll` 及 `version.json` 來源 SHA。
-3. Chromium 對實際靜態產物驗收六種寬度、需求摘要、品牌資產與 metadata。
-4. 僅 `main` 保存 `pages-static-export` artifact；驗證 job 只需 `contents: read`。
-5. 僅 `main` 成功後執行 deploy job，讀取已啟用的 Pages 設定並部署**同一份已驗證產物**。deploy job 只授 `pages: write`、`id-token: write`，環境為 `github-pages`。PR 不部署。
-
-官方 Actions 皆固定完整 commit SHA。維護流程為：最新 main → `codex/<任務>` 分支 → PR → CI → 合併 → main 驗證與部署 → 公開站核對。`CI 成功` 與 `部署成功` 分開確認；公開站 `/version.json` 的 `sourceSha` 必須等於部署的 main commit，`sourceState` 為 `clean`。該檔只記錄版本、建置時間與路徑，不包含訪客資料。
-
-先前 `gh-pages` 分支為歷史靜態成品，**目前不作日常發布來源，不需手動推送**。若將來改回分支發布，須另行同步 Pages 設定、workflow 與本文件，不能只推成品分支便宣稱已上線。管理 API 若回傳 403，使用有管理權限的帳號處理所需設定；不藉改變 repo 可見性解決權限問題。
-
-### 本機驗證 Pages 產物
+以下命令均在 `frontend/` 執行；不依賴根目錄的 `node_modules`。
 
 ```bash
-npm run build:pages
-npm run preview:pages -- --port 3002
+npm ci
+npm run lint
+npm run typecheck
+npm test
+npm run build
 ```
 
-開啟 **http://127.0.0.1:3002/xk-campaign-website-design/**。這是純靜態伺服器，不需要部署平台或後端服務。
-
-- `build:pages` 只在該次 build 注入 `STATIC_EXPORT=true` 與 `NEXT_PUBLIC_BASE_PATH=/xk-campaign-website-design`；一般 `npm run dev` 的首頁仍是 `/`。
-- 若自行設定 `NEXT_PUBLIC_BASE_PATH`，建置與預覽時必須使用相同值；預設不需額外設定環境變數。
-- Pages build 使用 `output: export`、trailing slash 及靜態圖片；Logo／符號路徑與 Next.js 資產都包含同一個 basePath。
-- 官網導流使用已核對的完整絕對網址，不受廣告頁 basePath 影響。
-- 更換 repo 名稱或自訂網域時，一併核對 build 的 basePath、workflow 測試 URL、`campaign.pagesPreviewUrl` 與 README 網址。
-- 預覽頁保留 `noindex, nofollow`。官方 favicon 和 Open Graph 分享圖隨靜態輸出，分享圖跟隨建置時的 basePath。待正式廣告網址核定後再設定 canonical、`og:url` 與 sitemap。`robots.txt` 讓爬蟲可讀取頁面的 `noindex` 標籤，專案子路徑下的檔案不取代網域根目錄的爬取規則。
-
-靜態產物完整驗收（POSIX shell；Windows 可在 shell 中設定相同環境變數）：
-
-```bash
-PLAYWRIGHT_BASE_URL=http://127.0.0.1:3002/xk-campaign-website-design/ \
-PLAYWRIGHT_SERVER_COMMAND="npm run preview:pages -- --port 3002" \
-npm run test:e2e
-```
-
-自訂網域的本機同版預覽（與目前 CI 相同）：
+與目前自訂網域相同的根路徑靜態建置及預覽：
 
 ```bash
 NEXT_PUBLIC_BASE_PATH="" npm run build:pages
 NEXT_PUBLIC_BASE_PATH="" npm run preview:pages -- --port 3007
 ```
 
-開啟 **http://127.0.0.1:3007/**。兩個命令須使用同一個 basePath；不設環境變數時仍預設 repo 子路徑，方便獨立搬移與回歸測試。
+開啟 **http://127.0.0.1:3007/**（連接埠 **3007**）。輸出為 `frontend/out/`。環境變數寫法為 POSIX shell；其他 shell 請設定相同變數。
 
-## 工程與主要檔案
-
-| 檔案 | 用途 |
-| --- | --- |
-| `.github/workflows/pages.yml` | PR 檢查、main 靜態輸出驗證／保存與 Actions 部署 |
-| `scripts/build-pages.mjs`、`scripts/serve-pages.mjs` | 跨平台靜態建置與子路徑預覽 |
-| `src/app/page.tsx` | Server Component：首屏、三種情境、合作方式、工具區與頁尾 |
-| `src/app/layout.tsx`、`src/app/icon.svg`、`src/app/robots.txt` | `zh-Hant`、title、description、Open Graph 分享圖、favicon 及預覽索引設定 |
-| `src/app/globals.css`、`src/app/fonts.css` | 手機優先版面、品牌視覺、表單、換行與可見焦點、減少動態偏好 |
-| `src/config/campaign.ts` | **品牌名稱／正式 Logo 路徑／色票／字型、情境、動作、素材、外部網址、價位方案／刊登狀態與案例公開策略** |
-| `src/components/pricing-section.tsx`、`pricing-section.module.css` | Server Component：三檔預估起價、費用條件與前往需求工具的入口 |
-| `src/components/campaign-content.tsx`、`campaign-content.module.css` | Server Components：痛點、可開啟的自主展示、品牌／Email 與原生 FAQ／JSON-LD |
-| `public/showcases/` | 固定官網來源的三張 WebP，來源、尺寸及日期見本輪優化紀錄 |
-| `scripts/measure-fonts.mjs` | 可重現的冷 Chromium 字型／CSS 載入量測 |
-| `src/components/phone-preview.tsx` | Server Component：自行設計的手機頁面與店面向量插畫，明示「介面示意」及虛構品牌 |
-| `src/components/scenario-start.tsx` | Client Component：情境選取、定位表單與情境欄焦點 |
-| `src/components/brief-tool.tsx` | Client Component：記憶體草稿、驗證、摘要、複製／拒絕複製與返回修改 |
-| `src/lib/brief.ts` | 表單型別、虛構示範資料、素材互斥、欄位驗證與自然中文摘要 |
-| `src/components/brief-tool.test.tsx` | 表單互動回歸測試；另有 `src/lib/brief.test.ts` 覆蓋 Unicode 與摘要文案，共 32 項 |
-| `tests/e2e/campaign.spec.ts` | Playwright 驗收六種視窗寬度、首頁、摘要及 Pages 子路徑資源 |
-| `tests/e2e/content.spec.ts` | 版序、作品資源、FAQ 鍵盤／結構化資料、Email 與草稿隔離 |
-| `tests/e2e/pricing.spec.ts` | 刊登狀態、手機首屏費用入口、三方案與草稿保留驗收 |
-| `public/brand/` | 公司庫正式 Logo 03 的原始 SVG 與 PNG 分享圖 |
-| `.nvmrc`、`package-lock.json`、`package.json` | Node 24 與可獨立安裝、啟動、檢查及建置的工程基準 |
-
-靜態內容使用 Server Components；只有情境入口、表單及剪貼簿使用 Client Components。字型經 `@fontsource-variable/inter` 與 `@fontsource-variable/noto-sans-tc` 本地打包，不在瀏覽時呼叫 Google Fonts。使用原生語意表單控制項與 Lucide，沒有為簡單欄位另加 UI 元件依賴。`AGENTS.md` 是首次 `next dev` 自動產生的 Next.js 版本指引，後續已依其查閱此版內建文件。
-
-## 需求工具的行為與資料範圍
-
-- 三個「用這個情境開始」只改情境，保留品牌、受眾、主要動作（含其他動作）、素材與補充。跳轉完成後將焦點放到情境欄。
-- 必填欄位拒絕純空白、零寬與其他不可見字元，保留合法名稱與含 ZWJ 的 emoji 原文；錯誤放在欄位旁並連結 `aria-describedby`，焦點移到第一個錯誤欄位。
-- 「尚未準備」與其餘素材雙向互斥。「其他」主要動作有額外必填輸入欄。
-- 只有主動按「帶入示範資料」才覆寫草稿；使用虛構品牌「山角木作工作室」。
-- 長摘要自動增高，寬度改變或字型載入後重新量測；保留手動全文選取與向下拉高。其他動作以獨立敘述呈現，短語及完整句子都保留原意。
-- 每次產生摘要均使用最新草稿。舊版剪貼簿 Promise 不會在新版摘要上顯示過期的成功或失敗提示。
-- `navigator.clipboard.writeText` 成功後才顯示「已複製，可自行貼給 XK」。被拒或 API 不可用時保留唯讀全文，並提供「選取摘要全文」以手動複製。
-- 草稿僅使用 React 記憶體狀態。重新整理即清空，沒有 API、寄信、後台、追蹤像素、分析事件或瀏覽器儲存；網址只有頁內錨點，外連不附加草稿。
-- JavaScript 尚未完成載入或停用時，表單停用並顯示 noscript 說明。草稿控制項不帶 `name`，避免原生表單回退把內容寫入查詢字串。
-
-## 品牌與參考來源（唯讀）
-
-開始時工作區沒有目標專案，亦無既有 README、AGENTS、package.json 或 lockfile；已檢查後採新專案基準。參考資料讀取於 2026-11-21：
-
-- 公司庫 snapshot：`dca3329c556bdd88113181384543b5923e25618b`
-- 官網 snapshot：`95d8153192ac69b10821baa2a2f4b115a5693c03`
-- [Week 03 前端架構](https://github.com/xk2022/xplore-kaleidoscope/blob/main/doc/01_business-plan/week-03/01_nextjs-architecture_前端技術架構.md)
-- [Week 03 GitHub 開發流程](https://github.com/xk2022/xplore-kaleidoscope/blob/main/doc/01_business-plan/week-03/05_github-workflow_開發與版本管理規範.md)
-- [Week 04 作品集策略](https://github.com/xk2022/xplore-kaleidoscope/blob/main/doc/01_business-plan/week-04/01_portfolio-strategy_XK%20%E6%8A%80%E8%A1%93%E4%BD%9C%E5%93%81%E5%B1%95%E7%A4%BA%E7%AD%96%E7%95%A5.md)
-- [官網品牌 tokens 與焦點樣式](https://github.com/xk2022/xk-website/blob/main/src/app/globals.css)
-- [官網字型設定](https://github.com/xk2022/xk-website/blob/main/src/app/layout.tsx)
-- [公司庫正式 Logo 03 master](https://github.com/xk2022/xplore-kaleidoscope/blob/main/assets/brand/logo/source/original-design-files/xk-logo-03-master.svg)
-- [Logo 水平版來源](https://github.com/xk2022/xplore-kaleidoscope/blob/main/assets/brand/logo/svg/xk-logo-horizontal.svg)，blob `e1a52e7e30c943df03a5805d06754204fa4ce484`
-- [Logo 符號版來源](https://github.com/xk2022/xplore-kaleidoscope/blob/main/assets/brand/logo/svg/xk-logo-symbol.svg)，blob `277fafce8fd03edcfc1bb9c34458318ddcd4ed22`
-
-UI 使用深藍 `#101A33`、亮藍 `#3157D5`、青色 `#19B8D5`；正式 Logo 原稿色保留 `#101828`／`#2563EB`。字型為 Inter／Noto Sans TC 的 variable 版本（CSS 家族名稱帶 Variable），備援為 Microsoft JhengHei、PingFang TC、Arial。焦點使用亮藍 2px 外框及 4px 間距（輸入欄為 3px）。
-
-目前提供三張可開啟的**自主展示**作品卡，不宣稱為付費客戶、委託交付或品牌背書。`campaign.casePublication` 管理公開策略與可用網址；`showcases` 管理案例文字、圖片與動作。首屏手機內的「山角日常」仍為虛構介面示意。截圖源自官網固定 commit，保存的是 2026-11-21 畫面，可能與展示站新版細節不同；來源見本輪紀錄。
-
-## 外部連結核對（2026-11-25）
-
-2026-11-23 的網域停放／聯絡待確認問題為歷史狀態。此次重新核對官網來源及 Cloud Chrome，官網已恢復並正式公開 `system.xk2022@gmail.com`。本專案改用實際可開啟的 www 官網絕對網址，沒有修改官網 repo、DNS 或聯絡帳號。
-
-| 入口 | 現行完整網址 | 核對結果 |
-| --- | --- | --- |
-| XK 官網 | https://www.xplorekaleidoscope.com/ | Cloud Chrome 開啟首頁內容 |
-| 完整服務 | https://www.xplorekaleidoscope.com/services/ | Cloud Chrome 開啟服務內容 |
-| 技術作品集 | https://www.xplorekaleidoscope.com/portfolio/ | Cloud Chrome 開啟作品內容 |
-| 查看 XK 聯絡資訊 | https://www.xplorekaleidoscope.com/contact/ | Cloud Chrome 開啟，核對公開 Email 專案詢價 |
-| Email 專案詢價 | `mailto:system.xk2022@gmail.com` | 來源碼及可見官方入口一致；未寄送測試信 |
-| 三月手工湯包 | https://showcase.xplorekaleidoscope.com/march-tangbao/ | HTTP 200、Cloud Chrome 示範 → 預留訊息；未開啟或發送 LINE |
-| 宏能興業 | https://honest.xplorekaleidoscope.com/ | HTTP 200、Cloud Chrome PET 樣本帶入加工類別 |
-| 宏家燕窩 | https://honbird.xplorekaleidoscope.com/ | HTTP 200、Cloud Chrome 企業贈禮帶入表單 |
-
-Email 只開啟訪客的郵件程式，摘要需自行貼上並確認寄出；所有本站 `mailto:` 均不帶查詢字串或草稿。若未設定郵件程式，信箱地址也顯示為可選取文字。沒有新增 LINE、預約、免費諮詢承諾或寄信 API。
-
-## 歷史檢查與瀏覽器驗收（2026-11-23）
-
-本輪修復驗證日期：**2026-11-23（Asia/Taipei）**。環境：Node.js **v24.22.3**、npm **11.19.1**。lockfile 實際安裝 Next.js **16.4.6**。所有命令從本專案根目錄執行。
-
-| 命令 | 結果 |
-| --- | --- |
-| `npm ci` | 通過，依 lockfile 重新安裝 |
-| `npm run lint` | 通過，零警告 |
-| `npm run typecheck` | 通過，含 Next.js route typegen |
-| `npm test` | 31／31 通過 |
-| `npm run build` | 通過，`/` 預先產生為靜態頁面 |
-| `npm run build:pages` | 通過，產生含子路徑與 `.nojekyll` 的 `out/` |
-| `npm run test:e2e`（Pages 靜態預覽） | 23／23 通過，根路徑與 repo 子路徑均完成驗收 |
-
-在此受管環境中，安裝、啟動與 Turbopack 的 PostCSS 內部程序需要允許網路／本機綁定連接埠。第一次在受限 shell 執行 build 時曾被 `bind port: Operation not permitted` 阻擋；允許本機網路後，同一 `npm run build` 已成功，沒有以略過編譯或關閉檢查處理。一般本機執行不需要此環境的工具權限參數。
-
-### 瀏覽器範圍
-
-初版的一般 production 預覽於 2026-11-21 通過 15 項測試，Pages 靜態預覽於 2026-11-22 通過 16 項。初版也在 Cloud Chrome 操作「帶入示範 → 產生需求摘要」，確認全文、聯絡入口及草稿清除。
-
-- 本次以純靜態預覽 `/xk-campaign-website-design/` 驗證 Logo、favicon 與分享圖的路徑及內容類型，並檢查首頁資產載入。
-- 2026-11-21 Chromium 實際瀏覽器，以 production `npm start` 的 3000 連接埠驗收；另以開發模式 3001 驗證示範 → 摘要、網址無草稿及無頁面程式錯誤。
-- 375、390、768、1024、1280、1440 px：首頁、表單、長品牌及多行摘要均檢查水平溢位。新一輪的首頁與摘要截圖會寫入 `test-results/`，初版四種寬度的參考截圖保存在 `artifacts/screenshots/`。
-- 375×667 及 375×812：兩個首屏入口皆位於可視範圍，按鈕高度至少 44px。
-- 三情境入口保留手填資料；直接填表、其他動作、素材雙向互斥、空白必填與第一錯誤焦點。
-- 示範 → 摘要 → 返回修改為報名 → 再產生 → 真實剪貼簿寫入與讀回全文比對；另模擬 `NotAllowedError` 驗證手動選取全文與沒有誤報成功。
-- 重新整理清空；網址、localStorage、sessionStorage 均不含草稿；JavaScript 停用時不能送出或填寫草稿。
-- Enter／Tab／方向鍵可完成示範、選取、產生及返回；檢查 2px 可見焦點、摘要焦點與 metadata、外部 href。
-
-Playwright 預設使用系統 `/usr/bin/chromium`（若存在），否則使用其管理的 Chromium。可指定 `CHROMIUM_PATH`。首次在未安裝瀏覽器的電腦執行：
+完整 Chromium 驗收：
 
 ```bash
-npx playwright install chromium
+PLAYWRIGHT_BASE_URL=http://127.0.0.1:3007/ \
+PLAYWRIGHT_SERVER_COMMAND="NEXT_PUBLIC_BASE_PATH= npm run preview:pages -- --port 3007" \
 npm run test:e2e
 ```
 
-預設測試會重用 3000 的既有 server，無 server 時自動啟動 `npm run dev`；可用 `PLAYWRIGHT_BASE_URL` 與 `PLAYWRIGHT_SERVER_COMMAND` 指向靜態 Pages 預覽。CI 會自行啟動測試伺服器。HTML 報告輸出至 `playwright-report/`，失敗追蹤輸出至 `test-results/`，兩者不納入原始碼版本。
-
-本輪在 375／1440px 的表單與摘要狀態以 axe-core 4.14.1 複查；複雜示意背景另以保守合成色與實際截圖人工檢視，完整結果見品質待辦，未宣稱全站 WCAG 認證。
-
-此次本機驗收為 Chromium 的指定 viewport。實體手機、Safari／Firefox 與真實廣告投放待驗證。遠端發布狀態以 `Verify and deploy GitHub Pages` 的 deploy job、部署環境及公開站 `version.json` 為準。正式廣告網址核定前，展示站維持 `noindex, nofollow`。
-
-## 2026-11-23 改善與量測
-
-本輪依 [品質待辦](doc/02_quality_backlog_2026-11-23.md) 處理 Q002–010，並完成 Q001 可做的告知與保存流程。功能性說明調整為 14–16px、補強文字對比與 200% 字級重排；摘要改為全文展開，必填驗證拒絕不可見字元，完整句動作保留原話。交付討論範圍、素材準備與製造／活動示意集中於 `src/config/campaign.ts`；示意是虛構內容，非客戶實績。
-
-字型維持 Inter／Noto Sans TC；改為 variable 字型後，Noto Unicode range 覆蓋 16,661 個碼位、Inter 2,466 個碼位，與原套件宣告一致，未縮減正體中文字集。中文及 emoji 已實際核對字形：繁中使用 Noto Sans TC Variable，emoji 使用系統 Noto Color Emoji。
-
-本機冷 Chromium context、375×812、DPR 1、mobile/touch，等待 load + networkidle + document.fonts.ready，尚未捲動。伺服器沒有 HTTP 壓縮；比較實際改版前／後頁面，新增內容也計入後測：
-
-| 觀察項目 | 改版前 | 改版後 |
-| --- | --- | --- |
-| 初載字型請求 | 31 | 15（減少 51.6%） |
-| 字型 encodedBodySize | 1,052,728 B | 963,216 B（減少 8.5%） |
-| CSS encodedBodySize | 370,561 B | 138,748 B（減少 62.6%） |
-| 載入期間 lab CLS | 0 | 0 |
-
-這些是本機 ResourceTiming body bytes 與有限載入期間的觀察，不是公開網路 transfer、真實使用者資料或 Core Web Vitals 達標宣稱。重現量測（先啟動靜態預覽）：
+可攜子路徑驗收：
 
 ```bash
-node scripts/measure-fonts.mjs http://127.0.0.1:3007/
+npm run build:pages
+PLAYWRIGHT_BASE_URL=http://127.0.0.1:3002/xk-campaign-website-design/ \
+PLAYWRIGHT_SERVER_COMMAND="npm run preview:pages -- --port 3002" \
+npm run test:e2e
 ```
 
-Q011 補充環境：官方 Playwright WebKit 27.2 已下載，實際啟動受本機缺少 GTK4、Graphene、Harfbuzz ICU、Manette、Hyphen、GLESv2 系統函式庫阻擋，未執行頁面流程。未停用安全檢查或以 Chromium 代稱 Safari。**實體 iPhone／Android、Safari 與 LINE 內建瀏覽器仍待實機驗收**；裝置／OS／瀏覽器版本、日期與必測路徑列在品質待辦 Q011。
+未安裝瀏覽器時先執行 `npx playwright install chromium`；若有系統 `/usr/bin/chromium`，測試會優先使用，也可指定 `CHROMIUM_PATH`。Playwright 從前端設定讀取根目錄 `tests/e2e/`，結果位於 `frontend/test-results/`、`frontend/playwright-report/`，不納入版控。
 
-### 本輪發布結果
+## 展示連結核對（2026-11-27）
 
-2026-11-23 已合併 [修復 PR #5](https://github.com/xk2022/xk-website-lp-campaign/pull/5)。[main Actions 45053375629](https://github.com/xk2022/xk-website-lp-campaign/actions/runs/45053375629) 驗證與部署均成功，公開 `version.json` 已核對來源 `a2e3bedbf6cca59cec0530d13bae6d8a639198d9`、`clean`、空 basePath。Cloud Chrome 實際走完示範、返回修改其他動作、重新產生及複製，觀察最新摘要與成功提示；品牌資產、分享圖、favicon 與 robots.txt 均正常。
+| 樣品 | 現行網址 | 修正／驗證 |
+| --- | --- | --- |
+| 三月手工湯包 | https://showcase.xplorekaleidoscope.com/march-tangbao/ | 保持原址；HTTP 200，CSS／JS／圖片正常 |
+| 宏能興業 | https://showcase.xplorekaleidoscope.com/honest/ | 取代已回傳 404 的 `honest.xplorekaleidoscope.com`；新址及資產 200 |
+| 宏家燕窩 | https://showcase.xplorekaleidoscope.com/hongjia-birdnest/ | 取代已回傳 404 的 `honbird.xplorekaleidoscope.com`；新址及資產 200 |
 
-詳細分階段結果與日期保留在 [品質待辦的發布紀錄](doc/02_quality_backlog_2026-11-23.md)。這是 PR #5 功能版本的歷史紀錄；後續純文件部署另有來源 SHA，以該次 Actions 與公開版本檔為準。當時 Q001 正式官網／聯絡承接及 Q011 實機／WebKit 驗收仍保留待辦；Q001 的 2026-11-25 更新見本輪優化紀錄，Q011 仍待實機驗收。
+Cloud Chrome 已實開三頁，確認宏能 PET 樣本帶入、宏家企業送禮情境帶入、三月 V1 示範到預留訊息可操作；沒有對外送出。
+
+網址對照目前 [官網展示設定](https://github.com/xk2022/xk-website/blob/ee4b4709a9f8daa755e2595a46c158b3c92d8229/src/config/website-showcases.ts)、各來源 README 及 [Hub 登錄](https://github.com/xk2022/xk-website-showcase/blob/f63941867cdfc8cdf713e3075f75ec1e5e71da20/config/showcases.json)。兩個舊網址未提供轉址，不能只修改畫面文字而保留舊 href。
+
+所有樣品網址集中於 `frontend/src/config/campaign.ts` 的 `casePublication`，作品內容由 `showcases` 使用。測試獨立核對預期 href、本地截圖及另開分頁屬性。樣品為自主展示；外站可能另提供聯絡或測試入口，本次未送出真實詢問、預留或訂單。
+
+官網導流仍為完整絕對網址：[XK 官網](https://www.xplorekaleidoscope.com/)、[完整服務](https://www.xplorekaleidoscope.com/services/)、[技術作品集](https://www.xplorekaleidoscope.com/portfolio/)、[聯絡資訊](https://www.xplorekaleidoscope.com/contact/)，不受本頁 basePath 影響。公開 Email 為 `mailto:system.xk2022@gmail.com`，不附加草稿。
+
+## GitHub Actions 與部署
+
+[Verify and deploy GitHub Pages](https://github.com/xk2022/xk-website-lp-campaign/actions/workflows/pages.yml) 在 PR、推送 main 及手動執行時啟動。
+
+1. 以根目錄 `.nvmrc` 設定 Node.js 24；npm 快取鎖檔為 `frontend/package-lock.json`。
+2. 所有 npm／node／npx 指令以 `frontend/` 為工作目錄，執行安裝、lint、型別、單元、一般及靜態建置。
+3. 檢查 `frontend/out/index.html`、資產、`.nojekyll` 與 `version.json`，再對真正靜態成品跑 Chromium 驗收。
+4. PR 只驗證；main 成功後保存 **`frontend/out/`**，deploy job 發布同一份 `pages-static-export` artifact。
+5. 以公開 `/version.json` 核對 `sourceSha` 等於部署 main commit、`sourceState=clean`、`basePath=""`；CI 通過與部署成功分開確認。
+
+本專案為 XK 自有服務廣告，未登記至中央 Showcase Hub，保留既有 `web.xplorekaleidoscope.com` 與本 repo 的 Pages 發布。**作品集樣品**由 `xk2022/xk-website-showcase` 統一部署；本輪沒有變更 Hub、DNS、repo 可見性或 Pages 管理設定。新作品集專案應依公司中央展示規範登錄，勿直接複用此廣告的部署方式。
+
+維護流程：最新 main → `codex/<任務>` → PR → 最新 head CI 通過 → 合併 → main 驗證與部署 → 公開站核對。官方 Actions 固定完整 SHA、使用最小權限；歷史 `gh-pages` 分支不作本專案日常發布來源。
+
+## 主要資料與驗收紀錄
+
+| 位置 | 用途 |
+| --- | --- |
+| `frontend/src/config/campaign.ts` | 品牌／Logo 03、色票、字型、情境、素材、動作、三檔價格、FAQ、公開聯絡與展示網址 |
+| `frontend/src/app/page.tsx`、`layout.tsx` | Server 首頁、語系、metadata、OG 及預覽索引設定 |
+| `frontend/src/components/brief-tool.tsx`、`scenario-start.tsx`、`back-to-top.tsx` | Client 互動；其餘內容以 Server Components 呈現 |
+| `frontend/src/lib/brief.ts`、co-located tests | Unicode 必填、素材互斥、情境保留及最新摘要 |
+| `frontend/public/brand/`、`showcases/` | 正式 Logo 03 與有來源的三張本地 WebP；截圖為 2026-11-21 畫面，可能與最新展示細節不同 |
+| `docs/` | 原需求、工程範本、品質待辦、價位及來源／驗收紀錄 |
+
+品牌沿用深藍 `#101A33`、亮藍 `#3157D5`、青色 `#19B8D5`；Inter／Noto Sans TC Variable 本地打包，可見焦點及減少動態偏好保留。正式 Logo 與截圖的固定來源、blob、授權界線見歷史紀錄。
+
+本輪 Node24 安裝、lint、型別、32 項單元測試及兩種建置通過；根路徑瀏覽器驗收 32 通過／1 draft-only 略過，子路徑資源／版本／樣品連結另 3 項通過。
+
+本輪結果及來源映射見 [2026-11-27 架構與連結修正紀錄](docs/05_structure_and_links_2026-11-27.md)。歷史文件保留當時路徑與網址，現行操作以本 README 為準：
+
+- [一頁式專案命令範本](docs/01_one_page_solution.md)
+- [品質待辦／實機限制](docs/02_quality_backlog_2026-11-23.md)
+- [價格來源與刊登紀錄](docs/03_pricing_proposal_2026-11-24.md)
+- [內容、品牌及素材來源](docs/04_campaign_optimization_2026-11-25.md)
+
+Chromium viewport 驗收不等於實體裝置驗證；實體 iPhone／Android、Safari／Firefox、LINE 內建瀏覽器及郵件送達仍待實機／外部系統測試。沒有宣稱廣告成效或公開網路 Core Web Vitals 達標。

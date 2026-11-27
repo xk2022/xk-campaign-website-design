@@ -1,9 +1,8 @@
-<!-- BEGIN:nextjs-agent-rules -->
+# XK campaign repository
 
-## This is NOT the Next.js you know
-
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
-
-This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
-
-<!-- END:nextjs-agent-rules -->
+- The Next.js application, npm manifest/lockfile, framework configuration, scripts and public assets live in `frontend/`.
+- Run npm commands from `frontend/`, or use `npm --prefix frontend ...` from the repository root. Use Node.js 24 and the existing lockfile.
+- Read `frontend/AGENTS.md` and the installed Next.js documentation before changing application code.
+- Keep cross-project documentation in `docs/`, browser acceptance tests in `tests/e2e/`, and GitHub Actions in `.github/workflows/`.
+- Preserve memory-only briefs, published pricing, preview indexing policy and existing accessibility behavior.
+- Company documents, the official website and the central showcase repository are read-only references for this project.
