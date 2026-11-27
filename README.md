@@ -60,7 +60,7 @@ xk-website-lp-campaign/
 └── README.md
 ```
 
-前端套件、鎖檔、設定、程式與資產均已搬至 `frontend/`；`doc/` 改為 `docs/`。程式內部保持現有模組與 Server／Client 界線，未為分類新增空的功能模組。框架維持 Next.js App Router、React、TypeScript、Tailwind CSS 4、Lucide；沒有依賴升級。
+前端套件、鎖檔、設定、程式與資產均已搬至 `frontend/`；`doc/` 改為 `docs/`，歷史驗收截圖集中於 `docs/artifacts/`。程式內部保持現有模組與 Server／Client 界線，未為分類新增空的功能模組。框架維持 Next.js App Router、React、TypeScript、Tailwind CSS 4、Lucide；沒有依賴升級。
 
 **npm 指令現在從 `frontend/` 執行。** 根目錄可用 `npm --prefix frontend ...`，不另建根套件或重複鎖檔。套件名仍保留 `xk-campaign-website-design`，因此預設的本機子路徑驗收仍使用此名稱；自訂網域部署為空 basePath。
 

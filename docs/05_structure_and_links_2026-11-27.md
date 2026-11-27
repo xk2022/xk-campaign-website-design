@@ -34,6 +34,7 @@
 | Next／TS／ESLint／PostCSS／Vitest／Playwright 設定 | frontend/ 內相同檔名 |
 | Next.js 自動 AGENTS.md | frontend/AGENTS.md；根 AGENTS.md 改為 repo 工作範圍指引 |
 | doc/ | docs/ |
+| artifacts/screenshots/ | docs/artifacts/screenshots/（歷史驗收證據） |
 | out/、.next/、測試輸出 | frontend/out/、frontend/.next/、frontend/test-results/、frontend/playwright-report/ |
 | tests/e2e/、.github/workflows/、.nvmrc | 保留根目錄 |
 
