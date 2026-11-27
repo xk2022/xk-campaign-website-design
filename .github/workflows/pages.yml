@@ -23,6 +23,9 @@ jobs:
     name: Validate and build
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: frontend
     steps:
       - name: Check out source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -33,6 +36,7 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: npm
+          cache-dependency-path: frontend/package-lock.json
       - name: Install dependencies
         run: npm ci
       - name: Lint
@@ -66,7 +70,7 @@ jobs:
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           name: pages-static-export
-          path: out
+          path: frontend/out
           include-hidden-files: true
 
   deploy:

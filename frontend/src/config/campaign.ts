@@ -57,10 +57,12 @@ export const campaign = {
   // 僅列可開啟的自主展示；不代表付費客戶、委託交付或品牌背書。
   casePublication: {
     showNamedCases: true,
+    verifiedAt: "2026-11-27",
+    source: "https://github.com/xk2022/xk-website/blob/ee4b4709a9f8daa755e2595a46c158b3c92d8229/src/config/website-showcases.ts",
     displayLinks: [
       "https://showcase.xplorekaleidoscope.com/march-tangbao/",
-      "https://honest.xplorekaleidoscope.com/",
-      "https://honbird.xplorekaleidoscope.com/",
+      "https://showcase.xplorekaleidoscope.com/honest/",
+      "https://showcase.xplorekaleidoscope.com/hongjia-birdnest/",
     ],
   },
 } as const;
@@ -71,7 +73,7 @@ export const painPoints = [
   { title: "看完介紹，卻不知道怎麼開始？", description: "替這一頁選一個主要動作，接到導航、詢價或已確認的報名入口。" },
 ] as const;
 
-/** 公開自主展示；截圖來源與核對紀錄見 doc/04_campaign_optimization_2026-11-25.md。 */
+/** 公開自主展示；截圖來源與核對紀錄見 docs/04_campaign_optimization_2026-11-25.md。 */
 export const showcases = [
   {
     id: "march-tangbao", name: "三月手工湯包", category: "在地店家",

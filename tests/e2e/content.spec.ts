@@ -1,11 +1,11 @@
 import { expect, test, type Page } from "@playwright/test";
-import { pricing } from "../../src/config/campaign";
+import { pricing } from "../../frontend/src/config/campaign";
 
 const emailHref = "mailto:system.xk2022@gmail.com";
 const verifiedShowcases = [
   { name: "三月手工湯包", href: "https://showcase.xplorekaleidoscope.com/march-tangbao/", image: "march-tangbao.webp" },
-  { name: "宏能興業", href: "https://honest.xplorekaleidoscope.com/", image: "honest-diecut.webp" },
-  { name: "宏家燕窩", href: "https://honbird.xplorekaleidoscope.com/", image: "hongjia-birdnest.webp" },
+  { name: "宏能興業", href: "https://showcase.xplorekaleidoscope.com/honest/", image: "honest-diecut.webp" },
+  { name: "宏家燕窩", href: "https://showcase.xplorekaleidoscope.com/hongjia-birdnest/", image: "hongjia-birdnest.webp" },
 ] as const;
 
 async function load(page: Page) {
